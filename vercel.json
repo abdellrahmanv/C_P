@@ -1,0 +1,16 @@
+{
+  "crons": [
+    {
+      "path": "/api/automate?action=scout",
+      "schedule": "0 6 * * 1-5"
+    },
+    {
+      "path": "/api/automate?action=send-sequence",
+      "schedule": "0 7 * * 1-5"
+    },
+    {
+      "path": "/api/automate?action=daily-report",
+      "schedule": "0 18 * * 1-5"
+    }
+  ]
+}
