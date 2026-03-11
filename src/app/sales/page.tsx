@@ -224,6 +224,9 @@ export default function SalesAgent() {
             <Link href="/dashboard" className="text-sm text-[#888] hover:text-white transition">
               Product Dashboard
             </Link>
+            <Link href="/nexus" className="text-sm text-[#888] hover:text-white transition">
+              NEXUS
+            </Link>
             <button
               onClick={toggleAgent}
               className={`flex items-center gap-2 px-4 py-2 rounded-lg text-sm font-semibold transition ${

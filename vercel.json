@@ -11,6 +11,11 @@
     {
       "path": "/api/automate?action=daily-report",
       "schedule": "0 18 * * 1-5"
+    },
+    {
+      "path": "/api/nexus/eval",
+      "schedule": "0 */6 * * *"
     }
   ]
 }
+

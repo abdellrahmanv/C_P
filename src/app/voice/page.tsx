@@ -149,6 +149,7 @@ export default function VoicePage() {
         <div className="flex items-center gap-3">
           <Link href="/dashboard" className="text-sm text-gray-400 hover:text-white transition">Dashboard</Link>
           <Link href="/sales" className="text-sm text-gray-400 hover:text-white transition">Sales Agent</Link>
+          <Link href="/nexus" className="text-sm text-gray-400 hover:text-white transition">NEXUS</Link>
         </div>
       </header>
 

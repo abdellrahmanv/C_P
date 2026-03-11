@@ -208,3 +208,32 @@ select
 from public.invoices
 where status != 'paid'
 group by user_id;
+
+
+-- ============================================================
+-- NEXUS — AI Company OS Reports
+-- Run this block to add NEXUS monitoring to CashPulse
+-- ============================================================
+
+create table public.nexus_reports (
+  id text primary key,
+  timestamp timestamptz not null default now(),
+  system_health text check (system_health in ('GREEN', 'YELLOW', 'RED', 'UNKNOWN')),
+  overall_score integer check (overall_score between 0 and 100),
+  domain_scores jsonb default '[]'::jsonb,
+  fix_plan jsonb default '{}'::jsonb,
+  board_summary text,
+  eval_reports jsonb default '[]'::jsonb,
+  created_at timestamptz default now()
+);
+
+-- Only service role can write NEXUS reports (not end users)
+alter table public.nexus_reports enable row level security;
+
+create policy "Service role only"
+  on public.nexus_reports
+  using (false);  -- no user can read via anon key; service role bypasses RLS
+
+-- Index for fast time-series queries
+create index nexus_reports_timestamp_idx on public.nexus_reports (timestamp desc);
+
