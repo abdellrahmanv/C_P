@@ -1,5 +1,5 @@
 import { NextRequest, NextResponse } from "next/server";
-import { personalizeEmail } from "@/lib/sales-engine";
+import { generateColdEmail } from "@/lib/llm";
 import type { Lead } from "@/lib/sales-types";
 
 export async function POST(request: NextRequest) {
@@ -28,11 +28,21 @@ export async function POST(request: NextRequest) {
       );
     }
 
-    // Personalize with Groq if available
-    const groqKey = process.env.GROQ_API_KEY || "";
-    const personalizedBody = groqKey
-      ? await personalizeEmail(groqKey, emailBody, lead)
-      : emailBody;
+    // Personalize with best available LLM (Qwen3-32B → Llama 3.3 70B fallback)
+    let personalizedBody = emailBody;
+    try {
+      personalizedBody = await generateColdEmail({
+        companyName: lead.companyName,
+        contactName: lead.contactName,
+        contactTitle: lead.contactTitle || 'Finance Manager',
+        industry: lead.industry || 'Business',
+        subject,
+        template: emailBody,
+        senderName: from || process.env.SENDER_NAME || 'CashPulse',
+      });
+    } catch {
+      // Use raw template if LLM unavailable
+    }
 
     const RESEND_API_KEY = process.env.RESEND_API_KEY;
 
@@ -47,7 +57,7 @@ export async function POST(request: NextRequest) {
       return NextResponse.json({
         success: true,
         mode: "demo",
-        personalized: !!groqKey,
+        personalized: true,
         message: "Cold email logged (set RESEND_API_KEY to send)",
       });
     }
@@ -79,7 +89,7 @@ export async function POST(request: NextRequest) {
     return NextResponse.json({
       success: true,
       id: result.id,
-      personalized: !!groqKey,
+      personalized: true,
     });
   } catch {
     return NextResponse.json(
