@@ -1,5 +1,6 @@
 "use client";
 
+import { useState } from "react";
 import {
   DollarSign,
   Clock,
@@ -15,6 +16,35 @@ import {
 import Link from "next/link";
 
 export default function Home() {
+  const [waitlistEmail, setWaitlistEmail] = useState("");
+  const [waitlistStatus, setWaitlistStatus] = useState<"idle" | "loading" | "success" | "error">("idle");
+  const [waitlistMsg, setWaitlistMsg] = useState("");
+
+  async function handleWaitlist(e: React.FormEvent) {
+    e.preventDefault();
+    if (!waitlistEmail) return;
+    setWaitlistStatus("loading");
+    try {
+      const res = await fetch("/api/waitlist", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ email: waitlistEmail }),
+      });
+      const data = await res.json();
+      if (res.ok) {
+        setWaitlistStatus("success");
+        setWaitlistMsg(data.message || "You're on the list!");
+        setWaitlistEmail("");
+      } else {
+        setWaitlistStatus("error");
+        setWaitlistMsg(data.error || "Something went wrong");
+      }
+    } catch {
+      setWaitlistStatus("error");
+      setWaitlistMsg("Network error. Try again.");
+    }
+  }
+
   return (
     <div className="min-h-screen bg-[#0a0a0a] text-white">
       {/* Nav */}
@@ -29,7 +59,8 @@ export default function Home() {
           <div className="flex items-center gap-6">
             <a href="#features" className="text-sm text-[#888] hover:text-white transition">Features</a>
             <a href="#pricing" className="text-sm text-[#888] hover:text-white transition">Pricing</a>
-            <Link href="/dashboard" className="text-sm bg-[#00e87b] text-black px-4 py-2 rounded-lg font-semibold hover:bg-[#00c966] transition">
+            <Link href="/login" className="text-sm text-[#888] hover:text-white transition">Log In</Link>
+            <Link href="/login?mode=signup" className="text-sm bg-[#00e87b] text-black px-4 py-2 rounded-lg font-semibold hover:bg-[#00c966] transition">
               Start Free Trial
             </Link>
           </div>
@@ -51,7 +82,7 @@ export default function Home() {
             CashPulse predicts which invoices will be paid late — before they&apos;re due — and automatically follows up with the right message at the right time.
           </p>
           <div className="flex flex-col sm:flex-row gap-4 justify-center items-center">
-            <Link href="/dashboard" className="pulse-glow bg-[#00e87b] text-black px-8 py-4 rounded-xl text-lg font-bold hover:bg-[#00c966] transition flex items-center gap-2">
+            <Link href="/login?mode=signup" className="pulse-glow bg-[#00e87b] text-black px-8 py-4 rounded-xl text-lg font-bold hover:bg-[#00c966] transition flex items-center gap-2">
               Start Free — 14 Days <ArrowRight className="w-5 h-5" />
             </Link>
             <span className="text-[#888] text-sm">No credit card. 60-second setup.</span>
@@ -169,7 +200,7 @@ export default function Home() {
                     </li>
                   ))}
                 </ul>
-                <Link href="/dashboard" className={`block text-center py-3 rounded-xl font-semibold transition ${plan.highlight ? "bg-[#00e87b] text-black hover:bg-[#00c966]" : "bg-[#222] text-white hover:bg-[#333]"}`}>
+                <Link href="/login?mode=signup" className={`block text-center py-3 rounded-xl font-semibold transition ${plan.highlight ? "bg-[#00e87b] text-black hover:bg-[#00c966]" : "bg-[#222] text-white hover:bg-[#333]"}`}>
                   Start Free Trial
                 </Link>
               </div>
@@ -184,9 +215,41 @@ export default function Home() {
         <div className="max-w-2xl mx-auto text-center">
           <h2 className="text-3xl font-bold mb-4">How much are you owed right now?</h2>
           <p className="text-[#888] mb-8">Upload your invoices and find out in 60 seconds. Free.</p>
-          <Link href="/dashboard" className="inline-flex items-center gap-2 bg-[#00e87b] text-black px-8 py-4 rounded-xl text-lg font-bold hover:bg-[#00c966] transition">
+          <Link href="/login?mode=signup" className="inline-flex items-center gap-2 bg-[#00e87b] text-black px-8 py-4 rounded-xl text-lg font-bold hover:bg-[#00c966] transition">
             See My Money <ArrowRight className="w-5 h-5" />
           </Link>
+        </div>
+      </section>
+
+      {/* Email Capture / Waitlist */}
+      <section className="py-20 px-6 border-t border-[#222] bg-[#111]">
+        <div className="max-w-xl mx-auto text-center">
+          <h2 className="text-2xl font-bold mb-3">Not ready to sign up?</h2>
+          <p className="text-[#888] mb-8">Get early access updates, tips on collecting overdue invoices, and a free aging analysis template.</p>
+          <form onSubmit={handleWaitlist} className="flex flex-col sm:flex-row gap-3">
+            <input
+              type="email"
+              value={waitlistEmail}
+              onChange={(e) => setWaitlistEmail(e.target.value)}
+              required
+              placeholder="you@company.com"
+              className="flex-1 bg-[#0a0a0a] border border-[#333] rounded-xl px-5 py-3.5 text-white placeholder:text-[#555] focus:border-[#00e87b] focus:outline-none transition"
+            />
+            <button
+              type="submit"
+              disabled={waitlistStatus === "loading"}
+              className="bg-[#00e87b] text-black px-6 py-3.5 rounded-xl font-semibold hover:bg-[#00c966] transition disabled:opacity-50 whitespace-nowrap"
+            >
+              {waitlistStatus === "loading" ? "Joining..." : "Join Waitlist"}
+            </button>
+          </form>
+          {waitlistStatus === "success" && (
+            <p className="mt-4 text-[#00e87b] text-sm">{waitlistMsg}</p>
+          )}
+          {waitlistStatus === "error" && (
+            <p className="mt-4 text-red-400 text-sm">{waitlistMsg}</p>
+          )}
+          <p className="mt-4 text-[#555] text-xs">No spam. Unsubscribe anytime.</p>
         </div>
       </section>
 

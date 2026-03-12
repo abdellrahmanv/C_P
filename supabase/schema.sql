@@ -237,3 +237,19 @@ create policy "Service role only"
 -- Index for fast time-series queries
 create index nexus_reports_timestamp_idx on public.nexus_reports (timestamp desc);
 
+-- ============================================================
+-- WAITLIST (email capture from landing page)
+-- ============================================================
+
+create table public.waitlist (
+  id uuid default gen_random_uuid() primary key,
+  email text not null unique,
+  created_at timestamptz default now()
+);
+
+alter table public.waitlist enable row level security;
+
+-- Only service role can read/write waitlist
+create policy "Service role only" on public.waitlist
+  for all using (auth.role() = 'service_role');
+
