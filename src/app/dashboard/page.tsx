@@ -811,7 +811,7 @@ Beta LLC,INV-002,8500,2026-03-01,2026-02-01,paid,billing@beta.com`}
               </p>
               <div className="inline-flex flex-col items-center gap-3">
                 <a
-                  href="https://www.paypal.com/webapps/billing/plans/subscribe?plan_id=YOUR_PLAN_ID"
+                  href={`https://www.sandbox.paypal.com/webapps/billing/plans/subscribe?plan_id=${process.env.NEXT_PUBLIC_PAYPAL_GROWTH_PLAN_ID || 'P-8AF72973N39590509NGZNLZI'}`}
                   target="_blank"
                   rel="noopener noreferrer"
                   className="bg-[#0070ba] text-white px-8 py-4 rounded-xl text-lg font-bold hover:bg-[#005ea6] transition flex items-center gap-3"

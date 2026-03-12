@@ -10,9 +10,9 @@ function getSupabase() {
 
 // Map PayPal plan IDs to our plan names
 function planFromPayPalId(paypalPlanId: string): string {
-  const starterPlan = process.env.PAYPAL_STARTER_PLAN_ID;
-  const growthPlan = process.env.PAYPAL_GROWTH_PLAN_ID;
-  const scalePlan = process.env.PAYPAL_SCALE_PLAN_ID;
+  const starterPlan = process.env.PAYPAL_PLAN_STARTER;
+  const growthPlan = process.env.PAYPAL_PLAN_GROWTH;
+  const scalePlan = process.env.PAYPAL_PLAN_SCALE;
   if (paypalPlanId === starterPlan) return "starter";
   if (paypalPlanId === growthPlan) return "growth";
   if (paypalPlanId === scalePlan) return "scale";
@@ -138,7 +138,7 @@ export async function GET() {
       name: "Starter",
       price: 49,
       interval: "month" as const,
-      paypalPlanId: process.env.PAYPAL_STARTER_PLAN_ID || "DEMO_STARTER",
+      paypalPlanId: process.env.PAYPAL_PLAN_STARTER || "DEMO_STARTER",
       features: [
         "Up to 100 invoices/month",
         "Late payment predictions",
@@ -152,7 +152,7 @@ export async function GET() {
       name: "Growth",
       price: 149,
       interval: "month" as const,
-      paypalPlanId: process.env.PAYPAL_GROWTH_PLAN_ID || "DEMO_GROWTH",
+      paypalPlanId: process.env.PAYPAL_PLAN_GROWTH || "DEMO_GROWTH",
       features: [
         "Up to 500 invoices/month",
         "Late payment predictions",
@@ -167,7 +167,7 @@ export async function GET() {
       name: "Scale",
       price: 349,
       interval: "month" as const,
-      paypalPlanId: process.env.PAYPAL_SCALE_PLAN_ID || "DEMO_SCALE",
+      paypalPlanId: process.env.PAYPAL_PLAN_SCALE || "DEMO_SCALE",
       features: [
         "Unlimited invoices",
         "Late payment predictions",
