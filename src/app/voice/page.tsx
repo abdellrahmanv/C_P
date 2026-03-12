@@ -1,4 +1,4 @@
-﻿'use client';
+'use client';
 
 import { useState, useEffect } from 'react';
 import Link from 'next/link';
@@ -143,8 +143,13 @@ export default function VoicePage() {
             <div className="w-8 h-8 bg-[#00e87b] rounded-lg flex items-center justify-center font-bold text-black text-sm">C</div>
             <span className="font-bold text-lg">CashPulse</span>
           </Link>
-          <span className="text-white/[0.1]">/</span>
+          <span className="text-gray-600">/</span>
           <span className="text-gray-400">Voice Calls</span>
+        </div>
+        <div className="flex items-center gap-3">
+          <Link href="/dashboard" className="text-sm text-gray-400 hover:text-white transition">Dashboard</Link>
+          <Link href="/sales" className="text-sm text-gray-400 hover:text-white transition">Sales Agent</Link>
+          <Link href="/nexus" className="text-sm text-gray-400 hover:text-white transition">NEXUS</Link>
         </div>
       </header>
 
@@ -169,7 +174,7 @@ export default function VoicePage() {
                 </p>
                 <p className="text-sm text-gray-400 mt-0.5">
                   {status?.connected
-                    ? `${status.profiles?.length ?? 0} voice profile${(status.profiles?.length ?? 0) !== 1 ? 's' : ''} available â€” powered by Qwen3-TTS`
+                    ? `${status.profiles?.length ?? 0} voice profile${(status.profiles?.length ?? 0) !== 1 ? 's' : ''} available — powered by Qwen3-TTS`
                     : status?.message ?? 'Launch the Voicebox app to enable AI voice calls'}
                 </p>
               </div>
@@ -180,9 +185,9 @@ export default function VoicePage() {
                   href="https://github.com/jamiepine/voicebox/releases"
                   target="_blank"
                   rel="noopener noreferrer"
-                  className="text-sm bg-[#222] hover:bg-[#333] px-3 py-1.5 rounded-lg transition"
+                  className="text-sm bg-white/[0.06] hover:bg-[#333] px-3 py-1.5 rounded-lg transition"
                 >
-                  Download Voicebox â†—
+                  Download Voicebox ↗
                 </a>
               )}
               <button
@@ -222,12 +227,12 @@ export default function VoicePage() {
 
         {/* What this does */}
         <div className="bg-[#111] border border-white/[0.06] rounded-xl p-5 mb-6">
-          <h2 className="text-lg font-bold mb-2">ðŸŽ™ï¸ How AI Voice Collection Calls Work</h2>
+          <h2 className="text-lg font-bold mb-2">🎙️ How AI Voice Collection Calls Work</h2>
           <div className="grid grid-cols-4 gap-4 text-sm text-gray-400">
             {[
               { step: '1', label: 'Generate Script', desc: 'Qwen3-72B writes a professional, personalized call script for each overdue invoice' },
-              { step: '2', label: 'Clone Your Voice', desc: 'Voicebox (Qwen3-TTS) clones your voice from a 5-second sample â€” 100% local, zero cloud' },
-              { step: '3', label: 'Generate Audio', desc: 'Your cloned voice reads the script â€” natural prosody, sounds human' },
+              { step: '2', label: 'Clone Your Voice', desc: 'Voicebox (Qwen3-TTS) clones your voice from a 5-second sample — 100% local, zero cloud' },
+              { step: '3', label: 'Generate Audio', desc: 'Your cloned voice reads the script — natural prosody, sounds human' },
               { step: '4', label: 'Send or Auto-Dial', desc: 'Download the .wav file or connect Twilio to auto-dial customers' },
             ].map((s) => (
               <div key={s.step} className="text-center">
@@ -277,7 +282,7 @@ export default function VoicePage() {
                     </span>
                   </div>
                   <p className="text-sm text-gray-500 mt-0.5">
-                    {call.invoiceNumber} Â· ${call.amount.toLocaleString()} Â· Contact: {call.contactName}
+                    {call.invoiceNumber} · ${call.amount.toLocaleString()} · Contact: {call.contactName}
                   </p>
                 </div>
                 <div className="flex gap-2">
@@ -286,21 +291,21 @@ export default function VoicePage() {
                     disabled={call.status === 'generating-script'}
                     className="text-xs border border-white/[0.1] hover:border-[#555] px-3 py-1.5 rounded-lg transition disabled:opacity-50"
                   >
-                    {call.status === 'generating-script' ? 'âœ¦ Writing...' : 'âœ¦ Write Script'}
+                    {call.status === 'generating-script' ? '✦ Writing...' : '✦ Write Script'}
                   </button>
                   <button
                     onClick={() => generateAudio(i)}
                     disabled={!status?.connected || call.status === 'generating-audio'}
                     className="text-xs bg-[#00e87b]/10 border border-[#00e87b]/30 text-[#00e87b] hover:bg-[#00e87b]/20 px-3 py-1.5 rounded-lg transition disabled:opacity-40"
                   >
-                    {call.status === 'generating-audio' ? 'ðŸ”Š Recording...' : 'ðŸŽ™ï¸ Generate Audio'}
+                    {call.status === 'generating-audio' ? '🔊 Recording...' : '🎙️ Generate Audio'}
                   </button>
                   {call.audioBase64 && (
                     <button
                       onClick={() => downloadAudio(call)}
                       className="text-xs bg-[#00e87b] text-black font-semibold px-3 py-1.5 rounded-lg hover:bg-[#00cc6a] transition"
                     >
-                      â†“ Download .wav
+                      ↓ Download .wav
                     </button>
                   )}
                 </div>
@@ -323,13 +328,13 @@ export default function VoicePage() {
               )}
 
               {call.error && (
-                <p className="text-red-400 text-xs mt-2">âš  {call.error}</p>
+                <p className="text-red-400 text-xs mt-2">⚠ {call.error}</p>
               )}
 
               {call.status === 'ready' && (
                 <div className="mt-2 flex items-center gap-2">
                   <div className="w-2 h-2 bg-[#00e87b] rounded-full" />
-                  <span className="text-xs text-[#00e87b]">Audio ready â€” download the .wav to listen or send</span>
+                  <span className="text-xs text-[#00e87b]">Audio ready — download the .wav to listen or send</span>
                 </div>
               )}
             </div>
@@ -342,8 +347,8 @@ export default function VoicePage() {
           <div className="space-y-3 text-sm text-gray-400">
             {[
               { cmd: '1', text: 'Download Voicebox from github.com/jamiepine/voicebox/releases (Windows .msi available)' },
-              { cmd: '2', text: 'Install and launch the app â€” it starts a local REST server on port 8000' },
-              { cmd: '3', text: 'Go to Voice Profiles â†’ New Profile â†’ upload a 5-10 second audio clip of your voice' },
+              { cmd: '2', text: 'Install and launch the app — it starts a local REST server on port 8000' },
+              { cmd: '3', text: 'Go to Voice Profiles → New Profile → upload a 5-10 second audio clip of your voice' },
               { cmd: '4', text: 'Copy your profile ID and add to .env.local: VOICEBOX_PROFILE_ID=your-id-here' },
               { cmd: '5', text: 'Keep Voicebox running when using CashPulse voice features' },
             ].map((s) => (

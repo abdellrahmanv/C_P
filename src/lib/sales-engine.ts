@@ -421,7 +421,7 @@ export function generateMockLeads(count: number): Lead[] {
     "Thompson", "Garcia", "Martinez", "Robinson", "Clark", "Rodriguez",
   ];
 
-  const statuses: Lead["status"][] = ["new", "new", "new", "new", "contacted", "contacted", "replied", "trial"];
+  const statuses: Lead["status"][] = ["new", "new", "new", "contacted", "contacted", "replied", "replied", "trial", "trial", "customer"];
 
   return Array.from({ length: Math.min(count, companies.length) }, (_, i) => {
     const company = companies[i];

@@ -306,7 +306,7 @@ Beta LLC,INV-002,8500,2026-03-01,2026-02-01,paid,billing@beta.com`}
     return (
       <div className="min-h-screen bg-[#0a0a0a] text-white flex items-center justify-center">
         <div className="text-center">
-          <div className="w-16 h-16 border-4 border-[#333] border-t-[#00e87b] rounded-full animate-spin mx-auto mb-6"></div>
+          <div className="w-16 h-16 border-4 border-white/[0.1] border-t-[#00e87b] rounded-full animate-spin mx-auto mb-6"></div>
           <h2 className="text-xl font-bold mb-2">Analyzing your invoices...</h2>
           <p className="text-[#888]">Predicting late payments and calculating risk scores</p>
         </div>
@@ -717,7 +717,7 @@ Beta LLC,INV-002,8500,2026-03-01,2026-02-01,paid,billing@beta.com`}
                       </button>
                       <button
                         onClick={() => setExpandedEmail(null)}
-                        className="bg-[#222] text-white px-4 py-2 rounded-lg text-sm hover:bg-[#333] transition"
+                        className="bg-white/[0.06] text-white px-4 py-2 rounded-lg text-sm hover:bg-white/[0.1] transition"
                       >
                         Close
                       </button>
@@ -725,7 +725,7 @@ Beta LLC,INV-002,8500,2026-03-01,2026-02-01,paid,billing@beta.com`}
                         onClick={() => {
                           setFollowUps((prev) => prev.map((f, fi) => fi === followUps.indexOf(action) ? { ...f, sent: true } : f));
                         }}
-                        className="bg-[#222] text-[#888] px-4 py-2 rounded-lg text-sm hover:bg-[#333] transition"
+                        className="bg-white/[0.06] text-[#888] px-4 py-2 rounded-lg text-sm hover:bg-white/[0.1] transition"
                       >
                         Skip
                       </button>

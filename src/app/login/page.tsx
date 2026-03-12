@@ -1,4 +1,4 @@
-﻿'use client';
+'use client';
 
 import { useState, useEffect, Suspense } from 'react';
 import { useSearchParams } from 'next/navigation';
@@ -62,61 +62,70 @@ function LoginForm() {
 
   return (
     <div className="min-h-screen bg-[#0a0a0a] flex items-center justify-center p-4">
-      <div className="w-full max-w-md">
-        <Link href="/" className="flex items-center justify-center gap-2 mb-8">
-          <div className="w-8 h-8 bg-[#00e87b] rounded-lg flex items-center justify-center font-bold text-black">
-            C
+      <div className="w-full max-w-[400px]">
+        {/* Logo */}
+        <Link href="/" className="flex items-center justify-center gap-2.5 mb-10">
+          <div className="w-9 h-9 bg-[#00e87b] rounded-lg flex items-center justify-center">
+            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="black" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round"><line x1="12" y1="1" x2="12" y2="23"/><path d="M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6"/></svg>
           </div>
-          <span className="text-xl font-bold text-white">CashPulse</span>
+          <span className="text-[22px] font-semibold text-white tracking-tight">CashPulse</span>
         </Link>
 
+        {/* Card */}
         <div className="bg-[#111] border border-white/[0.06] rounded-2xl p-8">
-          <h1 className="text-2xl font-bold text-white mb-2">
+          <h1 className="text-[22px] font-semibold text-white text-center mb-1">
             {mode === 'login' && 'Welcome back'}
-            {mode === 'signup' && 'Start collecting'}
-            {mode === 'forgot' && 'Reset password'}
+            {mode === 'signup' && 'Create your account'}
+            {mode === 'forgot' && 'Reset your password'}
           </h1>
-          <p className="text-gray-400 mb-6">
-            {mode === 'login' && 'Log in to your CashPulse dashboard'}
-            {mode === 'signup' && 'Create your account â€” free to start'}
-            {mode === 'forgot' && 'Enter your email to reset your password'}
+          <p className="text-[14px] text-[#888] text-center mb-8">
+            {mode === 'login' && 'Log in to continue to CashPulse'}
+            {mode === 'signup' && 'Start your free 14-day trial'}
+            {mode === 'forgot' && "We'll send you a reset link"}
           </p>
 
           {error && (
-            <div className="bg-red-500/10 border border-red-500/20 rounded-lg p-3 mb-4 text-red-400 text-sm">
+            <div className="bg-red-500/10 border border-red-500/20 rounded-lg px-4 py-3 mb-5 text-red-400 text-[13px]">
               {error}
             </div>
           )}
           {message && (
-            <div className="bg-[#00e87b]/10 border border-[#00e87b]/20 rounded-lg p-3 mb-4 text-[#00e87b] text-sm">
+            <div className="bg-[#00e87b]/10 border border-[#00e87b]/20 rounded-lg px-4 py-3 mb-5 text-[#00e87b] text-[13px]">
               {message}
             </div>
           )}
 
-          <form onSubmit={handleSubmit} className="space-y-4">
+          <form onSubmit={handleSubmit} className="space-y-5">
             <div>
-              <label className="block text-sm text-gray-400 mb-1">Email</label>
+              <label className="block text-[13px] font-medium text-[#ccc] mb-1.5">Email address</label>
               <input
                 type="email"
                 value={email}
                 onChange={(e) => setEmail(e.target.value)}
                 required
-                className="w-full bg-[#0a0a0a] border border-white/[0.1] rounded-lg px-4 py-3 text-white focus:border-[#00e87b] focus:outline-none transition"
+                className="w-full bg-[#0a0a0a] border border-white/[0.1] rounded-lg px-4 py-3 text-white text-[15px] focus:border-[#00e87b] focus:ring-1 focus:ring-[#00e87b]/30 focus:outline-none transition placeholder:text-[#555]"
                 placeholder="you@company.com"
               />
             </div>
 
             {mode !== 'forgot' && (
               <div>
-                <label className="block text-sm text-gray-400 mb-1">Password</label>
+                <div className="flex items-center justify-between mb-1.5">
+                  <label className="text-[13px] font-medium text-[#ccc]">Password</label>
+                  {mode === 'login' && (
+                    <button type="button" onClick={() => setMode('forgot')} className="text-[12px] text-[#00e87b] hover:underline">
+                      Forgot password?
+                    </button>
+                  )}
+                </div>
                 <input
                   type="password"
                   value={password}
                   onChange={(e) => setPassword(e.target.value)}
                   required
                   minLength={6}
-                  className="w-full bg-[#0a0a0a] border border-white/[0.1] rounded-lg px-4 py-3 text-white focus:border-[#00e87b] focus:outline-none transition"
-                  placeholder="â€¢â€¢â€¢â€¢â€¢â€¢â€¢â€¢"
+                  className="w-full bg-[#0a0a0a] border border-white/[0.1] rounded-lg px-4 py-3 text-white text-[15px] focus:border-[#00e87b] focus:ring-1 focus:ring-[#00e87b]/30 focus:outline-none transition placeholder:text-[#555]"
+                  placeholder="Minimum 6 characters"
                 />
               </div>
             )}
@@ -124,54 +133,58 @@ function LoginForm() {
             <button
               type="submit"
               disabled={loading}
-              className="w-full bg-[#00e87b] text-black font-semibold py-3 rounded-lg hover:bg-[#00cc6a] transition disabled:opacity-50"
+              className="w-full bg-[#00e87b] text-black font-semibold py-3 rounded-lg text-[15px] hover:bg-[#00c966] transition disabled:opacity-50 disabled:cursor-not-allowed"
             >
               {loading
-                ? 'Loading...'
+                ? 'Please wait...'
                 : mode === 'login'
-                ? 'Log In'
+                ? 'Continue'
                 : mode === 'signup'
-                ? 'Create Account'
-                : 'Send Reset Link'}
+                ? 'Continue'
+                : 'Send reset link'}
             </button>
           </form>
 
-          <div className="mt-6 text-center text-sm text-gray-400 space-y-2">
+          {/* Divider */}
+          <div className="flex items-center gap-3 my-6">
+            <div className="flex-1 h-px bg-white/[0.06]" />
+            <span className="text-[12px] text-[#666] uppercase tracking-wider">or</span>
+            <div className="flex-1 h-px bg-white/[0.06]" />
+          </div>
+
+          {/* Toggle login/signup */}
+          <div className="text-center text-[14px] text-[#888]">
             {mode === 'login' && (
-              <>
-                <p>
-                  Don&apos;t have an account?{' '}
-                  <button onClick={() => setMode('signup')} className="text-[#00e87b] hover:underline">
-                    Sign up free
-                  </button>
-                </p>
-                <p>
-                  <button onClick={() => setMode('forgot')} className="text-gray-500 hover:text-gray-300">
-                    Forgot password?
-                  </button>
-                </p>
-              </>
+              <p>
+                Don&apos;t have an account?{' '}
+                <button onClick={() => setMode('signup')} className="text-[#00e87b] font-medium hover:underline">
+                  Sign up
+                </button>
+              </p>
             )}
             {mode === 'signup' && (
               <p>
                 Already have an account?{' '}
-                <button onClick={() => setMode('login')} className="text-[#00e87b] hover:underline">
+                <button onClick={() => setMode('login')} className="text-[#00e87b] font-medium hover:underline">
                   Log in
                 </button>
               </p>
             )}
             {mode === 'forgot' && (
               <p>
-                <button onClick={() => setMode('login')} className="text-[#00e87b] hover:underline">
-                  Back to login
+                <button onClick={() => setMode('login')} className="text-[#00e87b] font-medium hover:underline">
+                  Back to log in
                 </button>
               </p>
             )}
           </div>
         </div>
 
-        <p className="text-center text-xs text-gray-600 mt-6">
-          By signing up, you agree to our Terms of Service and Privacy Policy.
+        <p className="text-center text-[12px] text-[#555] mt-6 leading-relaxed">
+          By continuing, you agree to CashPulse&apos;s{' '}
+          <a href="#" className="text-[#888] hover:text-white underline">Terms of Service</a>{' '}
+          and{' '}
+          <a href="#" className="text-[#888] hover:text-white underline">Privacy Policy</a>.
         </p>
       </div>
     </div>

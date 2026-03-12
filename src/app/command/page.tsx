@@ -1,4 +1,4 @@
-﻿"use client";
+"use client";
 
 import { useState, useEffect, useCallback } from "react";
 import {
@@ -19,7 +19,7 @@ import {
 import Link from "next/link";
 import { supabase } from "@/lib/supabase";
 
-// â”€â”€â”€ Types â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
+// ─── Types ───────────────────────────────────────────────────
 interface PipelineData {
   new: number;
   contacted: number;
@@ -44,7 +44,7 @@ interface ActivityItem {
   lead_name?: string;
 }
 
-// â”€â”€â”€ Animated Number â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
+// ─── Animated Number ─────────────────────────────────────────
 function AnimatedNumber({ value, duration = 1200 }: { value: number; duration?: number }) {
   const [display, setDisplay] = useState(0);
 
@@ -68,7 +68,7 @@ function AnimatedNumber({ value, duration = 1200 }: { value: number; duration?: 
   return <>{display}</>;
 }
 
-// â”€â”€â”€ Pulse Dot â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
+// ─── Pulse Dot ───────────────────────────────────────────────
 function PulseDot({ color = "#00e87b" }: { color?: string }) {
   return (
     <span className="relative flex h-3 w-3">
@@ -84,7 +84,7 @@ function PulseDot({ color = "#00e87b" }: { color?: string }) {
   );
 }
 
-// â”€â”€â”€ Health Bar â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
+// ─── Health Bar ──────────────────────────────────────────────
 function HealthBar({ score, label, delay = 0 }: { score: number; label: string; delay?: number }) {
   const [width, setWidth] = useState(0);
 
@@ -114,7 +114,7 @@ function HealthBar({ score, label, delay = 0 }: { score: number; label: string; 
   );
 }
 
-// â”€â”€â”€ Pipeline Stage â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
+// ─── Pipeline Stage ──────────────────────────────────────────
 function PipelineStage({
   label,
   count,
@@ -162,9 +162,9 @@ function PipelineStage({
   );
 }
 
-// â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•
+// ═══════════════════════════════════════════════════════════════
 // MAIN COMPONENT
-// â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•
+// ═══════════════════════════════════════════════════════════════
 export default function CommandCenter() {
   const [mounted, setMounted] = useState(false);
   const [loading, setLoading] = useState(true);
@@ -319,7 +319,7 @@ export default function CommandCenter() {
     return `${Math.floor(hrs / 24)}d ago`;
   }
 
-  // â”€â”€â”€ Boot Animation â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
+  // ─── Boot Animation ─────────────────────────────────────────
   if (!mounted || loading) {
     return (
       <div className="min-h-screen bg-[#0a0a0a] flex items-center justify-center">
@@ -352,7 +352,7 @@ export default function CommandCenter() {
 
   return (
     <div className="min-h-screen bg-[#0a0a0a] text-white overflow-hidden">
-      {/* â”€â”€â”€ Animated Grid Background â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€ */}
+      {/* ─── Animated Grid Background ───────────────────────── */}
       <div className="fixed inset-0 pointer-events-none overflow-hidden">
         <div
           className="absolute inset-0 opacity-[0.03]"
@@ -368,7 +368,7 @@ export default function CommandCenter() {
         <div className="absolute bottom-0 right-0 w-[400px] h-[400px] bg-[#00e87b]/[0.015] rounded-full blur-[100px] translate-x-1/2 translate-y-1/2" />
       </div>
 
-      {/* â”€â”€â”€ Top Bar â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€ */}
+      {/* ─── Top Bar ────────────────────────────────────────── */}
       <nav className="sticky top-0 z-50 bg-[#0a0a0a]/80 backdrop-blur-xl border-b border-[#1a1a1a]">
         <div className="max-w-[1400px] mx-auto px-6 py-3 flex items-center justify-between">
           <div className="flex items-center gap-4">
@@ -402,7 +402,7 @@ export default function CommandCenter() {
         </div>
       </nav>
 
-      {/* â”€â”€â”€ Content â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€ */}
+      {/* ─── Content ────────────────────────────────────────── */}
       <main className="max-w-[1400px] mx-auto px-6 py-8 relative">
         {/* Hero Stat Row */}
         <div className="grid grid-cols-2 md:grid-cols-4 gap-4 mb-8">
@@ -446,7 +446,7 @@ export default function CommandCenter() {
 
         {/* Main Grid */}
         <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
-          {/* â”€â”€â”€ Pipeline (2/3 width) â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€ */}
+          {/* ─── Pipeline (2/3 width) ───────────────────────── */}
           <div className="lg:col-span-2 space-y-6">
             {/* Pipeline Funnel */}
             <Card title="Sales Pipeline" icon={Target} delay={400}>
@@ -478,7 +478,7 @@ export default function CommandCenter() {
             </Card>
 
             {/* NEXUS Health */}
-            <Card title="System Health â€” NEXUS" icon={BarChart3} delay={600}>
+            <Card title="System Health — NEXUS" icon={BarChart3} delay={600}>
               {nexus?.domain_scores ? (
                 <div className="space-y-4 mt-4">
                   {Object.entries(nexus.domain_scores).map(([domain, data], i) => (
@@ -503,7 +503,7 @@ export default function CommandCenter() {
             </Card>
           </div>
 
-          {/* â”€â”€â”€ Sidebar (1/3 width) â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€ */}
+          {/* ─── Sidebar (1/3 width) ────────────────────────── */}
           <div className="space-y-6">
             {/* Quick Actions */}
             <Card title="Quick Actions" icon={Zap} delay={500}>
@@ -528,13 +528,13 @@ export default function CommandCenter() {
                   href="/sales"
                   className="block w-full text-center py-2.5 rounded-xl bg-[#00e87b]/10 text-[#00e87b] text-sm font-medium hover:bg-[#00e87b]/20 transition border border-[#00e87b]/20"
                 >
-                  Open Sales Agent â†’
+                  Open Sales Agent →
                 </Link>
                 <Link
                   href="/nexus"
-                  className="block w-full text-center py-2.5 rounded-xl bg-[#1a1a1a] text-[#aaa] text-sm font-medium hover:bg-[#222] transition border border-white/[0.06]"
+                  className="block w-full text-center py-2.5 rounded-xl bg-[#1a1a1a] text-[#aaa] text-sm font-medium hover:bg-white/[0.06] transition border border-white/[0.06]"
                 >
-                  NEXUS Console â†’
+                  NEXUS Console →
                 </Link>
               </div>
             </Card>
@@ -593,9 +593,9 @@ export default function CommandCenter() {
   );
 }
 
-// â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•
+// ═══════════════════════════════════════════════════════════════
 // SUB-COMPONENTS
-// â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•
+// ═══════════════════════════════════════════════════════════════
 
 function StatCard({
   label,
@@ -720,7 +720,7 @@ function ActionButton({
           ? "bg-[#00e87b]/10 border-[#00e87b]/30 text-[#00e87b]"
           : state === "error"
           ? "bg-red-500/10 border-red-500/30 text-red-400"
-          : "bg-[#1a1a1a] border-white/[0.06] text-[#aaa] hover:bg-[#222] hover:text-white"
+          : "bg-[#1a1a1a] border-white/[0.06] text-[#aaa] hover:bg-white/[0.06] hover:text-white"
       } disabled:opacity-50`}
     >
       {state === "loading" ? (
@@ -729,9 +729,9 @@ function ActionButton({
           Running...
         </span>
       ) : state === "done" ? (
-        "âœ“ Done"
+        "✓ Done"
       ) : state === "error" ? (
-        "âœ— Failed"
+        "✗ Failed"
       ) : (
         label
       )}

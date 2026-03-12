@@ -1,4 +1,4 @@
-﻿"use client";
+"use client";
 
 import { useState, useCallback, useEffect } from "react";
 import {
@@ -105,7 +105,7 @@ export default function SalesAgent() {
   // Scout for new leads
   const handleScout = useCallback(async () => {
     setIsLoading(true);
-    addLog("ðŸ” Scouting for new leads...");
+    addLog("🔍 Scouting for new leads...");
 
     try {
       const response = await fetch("/api/scout", {
@@ -116,7 +116,7 @@ export default function SalesAgent() {
       const data = await response.json();
 
       if (data.success) {
-        addLog(`âœ… Found ${data.count} leads, ${data.saved} new saved (${data.source})`);
+        addLog(`✅ Found ${data.count} leads, ${data.saved} new saved (${data.source})`);
 
         // Reload from Supabase to get persisted data
         const { data: dbLeads } = await supabase
@@ -149,7 +149,7 @@ export default function SalesAgent() {
         }
       }
     } catch {
-      addLog("âŒ Scout failed â€” check connection");
+      addLog("❌ Scout failed — check connection");
     }
 
     setIsLoading(false);
@@ -161,7 +161,7 @@ export default function SalesAgent() {
       const sequence = getColdEmailSequence(lead, senderName);
       const step = sequence[lead.sequenceStep] || sequence[0];
 
-      addLog(`ðŸ“§ Sending email to ${lead.contactName} @ ${lead.companyName} (Step ${step.step})...`);
+      addLog(`📧 Sending email to ${lead.contactName} @ ${lead.companyName} (Step ${step.step})...`);
 
       try {
         const response = await fetch("/api/cold-email", {
@@ -190,10 +190,10 @@ export default function SalesAgent() {
           );
           setLeads(updatedLeads);
           setMetrics(calculateSalesMetrics(updatedLeads));
-          addLog(`âœ… Email sent to ${lead.contactName} (${data.mode || "live"}, personalized: ${data.personalized || false})`);
+          addLog(`✅ Email sent to ${lead.contactName} (${data.mode || "live"}, personalized: ${data.personalized || false})`);
         }
       } catch {
-        addLog(`âŒ Failed to send email to ${lead.contactName}`);
+        addLog(`❌ Failed to send email to ${lead.contactName}`);
       }
     },
     [leads, senderName, addLog]
@@ -215,7 +215,7 @@ export default function SalesAgent() {
       })
       .slice(0, dailyLimit);
 
-    addLog(`ðŸš€ Auto-run started: ${dueLeads.length} leads ready`);
+    addLog(`🚀 Auto-run started: ${dueLeads.length} leads ready`);
 
     for (const lead of dueLeads) {
       await handleSendEmail(lead);
@@ -223,17 +223,17 @@ export default function SalesAgent() {
       await new Promise((resolve) => setTimeout(resolve, 200));
     }
 
-    addLog(`âœ… Auto-run complete: processed ${dueLeads.length} leads`);
+    addLog(`✅ Auto-run complete: processed ${dueLeads.length} leads`);
   }, [leads, senderName, dailyLimit, handleSendEmail, addLog]);
 
   // Toggle agent on/off
   const toggleAgent = useCallback(() => {
     if (isRunning) {
       setIsRunning(false);
-      addLog("â¸ Sales agent paused");
+      addLog("⏸ Sales agent paused");
     } else {
       setIsRunning(true);
-      addLog("â–¶ Sales agent started");
+      addLog("▶ Sales agent started");
       handleAutoRun();
     }
   }, [isRunning, handleAutoRun, addLog]);
@@ -273,24 +273,32 @@ export default function SalesAgent() {
               </div>
               <span className="text-xl font-bold">CashPulse</span>
             </Link>
-            <span className="text-white/[0.15]">|</span>
+            <span className="text-[#333]">|</span>
             <span className="text-sm text-[#888]">Sales Agent</span>
-            <div className={`flex items-center gap-1.5 px-2.5 py-1 rounded-full text-xs ${isRunning ? "bg-green-500/10 text-green-400" : "bg-white/[0.04] text-[#888]"}`}>
+            <div className={`flex items-center gap-1.5 px-2.5 py-1 rounded-full text-xs ${isRunning ? "bg-green-500/10 text-green-400" : "bg-white/[0.06] text-[#888]"}`}>
               <div className={`w-1.5 h-1.5 rounded-full ${isRunning ? "bg-green-400 animate-pulse" : "bg-[#555]"}`} />
               {isRunning ? "Running" : "Paused"}
             </div>
           </div>
-          <button
-            onClick={toggleAgent}
-            className={`flex items-center gap-2 px-4 py-2 rounded-lg text-sm font-semibold transition ${
-              isRunning
-                ? "bg-red-500/20 text-red-400 hover:bg-red-500/30"
-                : "bg-[#00e87b] text-black hover:bg-[#00c966]"
-            }`}
-          >
-            {isRunning ? <Pause className="w-4 h-4" /> : <Play className="w-4 h-4" />}
-            {isRunning ? "Stop Agent" : "Start Agent"}
-          </button>
+          <div className="flex items-center gap-3">
+            <Link href="/dashboard" className="text-sm text-[#888] hover:text-white transition">
+              Product Dashboard
+            </Link>
+            <Link href="/nexus" className="text-sm text-[#888] hover:text-white transition">
+              NEXUS
+            </Link>
+            <button
+              onClick={toggleAgent}
+              className={`flex items-center gap-2 px-4 py-2 rounded-lg text-sm font-semibold transition ${
+                isRunning
+                  ? "bg-red-500/20 text-red-400 hover:bg-red-500/30"
+                  : "bg-[#00e87b] text-black hover:bg-[#00c966]"
+              }`}
+            >
+              {isRunning ? <Pause className="w-4 h-4" /> : <Play className="w-4 h-4" />}
+              {isRunning ? "Stop Agent" : "Start Agent"}
+            </button>
+          </div>
         </div>
       </nav>
 
@@ -337,13 +345,13 @@ export default function SalesAgent() {
                 contacted: "Contacted",
                 replied: "Replied",
                 trial: "In Trial",
-                customer: "Customer ðŸ’°",
+                customer: "Customer 💰",
               };
               return (
                 <div key={status} className="bg-[#111] border border-white/[0.06] rounded-2xl p-4">
                   <div className="flex items-center justify-between mb-4">
                     <h3 className="font-medium text-sm">{stageLabels[status]}</h3>
-                    <span className="text-xs bg-[#222] px-2 py-0.5 rounded-full">{stageLeads.length}</span>
+                    <span className="text-xs bg-white/[0.06] px-2 py-0.5 rounded-full">{stageLeads.length}</span>
                   </div>
                   <div className="space-y-2 max-h-[500px] overflow-y-auto">
                     {stageLeads.slice(0, 15).map((lead) => (
@@ -356,7 +364,7 @@ export default function SalesAgent() {
                         <div className="text-xs text-[#888] truncate">{lead.contactName}</div>
                         <div className="flex items-center justify-between mt-2">
                           <span className="text-xs text-[#555]">{lead.contactTitle}</span>
-                          <span className={`text-xs px-1.5 py-0.5 rounded ${lead.score >= 60 ? "bg-green-500/10 text-green-400" : lead.score >= 40 ? "bg-yellow-500/10 text-yellow-400" : "bg-[#222] text-[#888]"}`}>
+                          <span className={`text-xs px-1.5 py-0.5 rounded ${lead.score >= 60 ? "bg-green-500/10 text-green-400" : lead.score >= 40 ? "bg-yellow-500/10 text-yellow-400" : "bg-white/[0.06] text-[#888]"}`}>
                             {lead.score}
                           </span>
                         </div>
@@ -367,7 +375,7 @@ export default function SalesAgent() {
                     <button
                       onClick={handleScout}
                       disabled={isLoading}
-                      className="w-full mt-3 bg-[#222] text-sm py-2 rounded-lg hover:bg-[#333] transition flex items-center justify-center gap-2"
+                      className="w-full mt-3 bg-white/[0.06] text-sm py-2 rounded-lg hover:bg-[#333] transition flex items-center justify-center gap-2"
                     >
                       <Search className="w-3 h-3" />
                       {isLoading ? "Scouting..." : "Find More Leads"}
@@ -558,7 +566,7 @@ export default function SalesAgent() {
                 <button
                   onClick={handleScout}
                   disabled={isLoading}
-                  className="w-full bg-[#222] py-3 rounded-xl font-semibold hover:bg-[#333] transition flex items-center justify-center gap-2"
+                  className="w-full bg-white/[0.06] py-3 rounded-xl font-semibold hover:bg-[#333] transition flex items-center justify-center gap-2"
                 >
                   <Search className="w-4 h-4" />
                   {isLoading ? "Scouting..." : "Scout 50 New Leads"}
@@ -716,7 +724,7 @@ export default function SalesAgent() {
                   <span className="text-[#00e87b] font-bold">4.</span>
                   <div>
                     <p className="font-medium">Set up Vercel Cron (free)</p>
-                    <p className="text-[#888] text-xs">Auto-run scout & sequences daily â€” add vercel.json cron config</p>
+                    <p className="text-[#888] text-xs">Auto-run scout & sequences daily — add vercel.json cron config</p>
                   </div>
                 </div>
               </div>
@@ -731,7 +739,7 @@ export default function SalesAgent() {
               <div className="flex justify-between items-start mb-4">
                 <div>
                   <h3 className="text-xl font-bold">{selectedLead.companyName}</h3>
-                  <p className="text-[#888]">{selectedLead.contactName} Â· {selectedLead.contactTitle}</p>
+                  <p className="text-[#888]">{selectedLead.contactName} · {selectedLead.contactTitle}</p>
                 </div>
                 <button onClick={() => setSelectedLead(null)} className="text-[#888] hover:text-white">
                   <XCircle className="w-5 h-5" />
@@ -787,7 +795,7 @@ export default function SalesAgent() {
                     );
                     setSelectedLead(null);
                   }}
-                  className="flex-1 bg-[#222] py-2.5 rounded-xl font-semibold hover:bg-[#333] transition"
+                  className="flex-1 bg-white/[0.06] py-2.5 rounded-xl font-semibold hover:bg-[#333] transition"
                 >
                   Mark as Replied
                 </button>
@@ -814,7 +822,7 @@ function MetricCard({
   color: string;
 }) {
   return (
-    <div className="bg-[#111] border border-white/[0.06] rounded-2xl p-5 hover:border-white/[0.12] transition-colors">
+    <div className="bg-[#111] border border-white/[0.06] rounded-2xl p-5">
       <div className="flex items-center gap-2 mb-2">
         <Icon className="w-4 h-4" style={{ color }} />
         <span className="text-xs text-[#888] uppercase tracking-wider">{label}</span>

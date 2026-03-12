@@ -1,4 +1,4 @@
-﻿'use client';
+'use client';
 
 import { useState, useEffect } from 'react';
 import Link from 'next/link';
@@ -67,7 +67,7 @@ export default function DemoPage() {
     <div className="min-h-screen bg-[#0a0a0a] text-white">
       {/* Top Bar */}
       <div className="bg-[#00e87b] text-black text-center py-2 text-sm font-medium">
-        ðŸŽ¯ This is a live demo with sample data.{' '}
+        🎯 This is a live demo with sample data.{' '}
         <Link href="/login" className="underline font-bold">
           Sign up free
         </Link>{' '}
@@ -80,13 +80,13 @@ export default function DemoPage() {
             C
           </div>
           <span className="font-bold text-lg">CashPulse</span>
-          <span className="text-xs bg-[#222] text-gray-400 px-2 py-0.5 rounded-full ml-2">DEMO</span>
+          <span className="text-xs bg-white/[0.06] text-gray-400 px-2 py-0.5 rounded-full ml-2">DEMO</span>
         </Link>
         <Link
           href="/login"
           className="bg-[#00e87b] text-black font-semibold px-4 py-2 rounded-lg hover:bg-[#00cc6a] transition text-sm"
         >
-          Start Free Trial â†’
+          Start Free Trial →
         </Link>
       </header>
 
@@ -118,7 +118,7 @@ export default function DemoPage() {
                   : 'text-gray-400 hover:text-white'
               }`}
             >
-              {tab === 'overview' ? 'ðŸ“Š Overview' : tab === 'invoices' ? 'ðŸ“„ Invoices' : 'âœ‰ï¸ AI Emails'}
+              {tab === 'overview' ? '📊 Overview' : tab === 'invoices' ? '📄 Invoices' : '✉️ AI Emails'}
             </button>
           ))}
         </div>
@@ -141,7 +141,7 @@ export default function DemoPage() {
                           {formatCurrency(bucket.amount)} ({bucket.count})
                         </span>
                       </div>
-                      <div className="h-2 bg-[#222] rounded-full overflow-hidden">
+                      <div className="h-2 bg-white/[0.06] rounded-full overflow-hidden">
                         <div
                           className="h-full rounded-full transition-all"
                           style={{
@@ -165,7 +165,7 @@ export default function DemoPage() {
                     <div>
                       <p className="text-white text-sm font-medium">{r.name}</p>
                       <p className="text-xs text-gray-500">
-                        {r.invoiceCount} invoice{r.invoiceCount > 1 ? 's' : ''} Â· {formatCurrency(r.totalOwed)}
+                        {r.invoiceCount} invoice{r.invoiceCount > 1 ? 's' : ''} · {formatCurrency(r.totalOwed)}
                       </p>
                     </div>
                     <div
@@ -235,7 +235,7 @@ export default function DemoPage() {
                         </span>
                       </td>
                       <td className="px-4 py-3">
-                        <div className="w-16 h-1.5 bg-[#222] rounded-full overflow-hidden">
+                        <div className="w-16 h-1.5 bg-white/[0.06] rounded-full overflow-hidden">
                           <div
                             className="h-full rounded-full"
                             style={{
@@ -298,10 +298,10 @@ export default function DemoPage() {
                 </div>
                 <div className="flex gap-2 mt-3">
                   <button className="text-xs bg-[#00e87b] text-black px-3 py-1.5 rounded font-medium opacity-50 cursor-not-allowed">
-                    âœ“ Send
+                    ✓ Send
                   </button>
                   <button className="text-xs border border-white/[0.1] text-gray-400 px-3 py-1.5 rounded opacity-50 cursor-not-allowed">
-                    âœï¸ Edit
+                    ✏️ Edit
                   </button>
                 </div>
               </div>
@@ -319,7 +319,7 @@ export default function DemoPage() {
             href="/login"
             className="inline-block bg-[#00e87b] text-black font-bold px-8 py-3 rounded-lg hover:bg-[#00cc6a] transition text-lg"
           >
-            Start Free Trial â†’
+            Start Free Trial →
           </Link>
         </div>
       </div>
