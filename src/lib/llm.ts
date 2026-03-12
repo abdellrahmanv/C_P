@@ -12,7 +12,7 @@
  * | Reasoning/strategy    | DeepSeek-R1        | Groq          | 30 req/min free  |
  */
 
-export type LLMProvider = 'groq' | 'openrouter';
+export type LLMProvider = 'groq' | 'openrouter' | 'ollama';
 
 export interface LLMConfig {
   provider: LLMProvider;
@@ -65,11 +65,60 @@ export async function callLLM(
   systemPrompt: string,
   userPrompt: string
 ): Promise<string> {
-  if (config.provider === 'groq') {
-    return callGroq(config, systemPrompt, userPrompt);
-  } else {
-    return callOpenRouter(config, systemPrompt, userPrompt);
+  if (config.provider === 'ollama') {
+    return callOllama(config, systemPrompt, userPrompt);
   }
+
+  try {
+    if (config.provider === 'groq') {
+      return await callGroq(config, systemPrompt, userPrompt);
+    } else {
+      return await callOpenRouter(config, systemPrompt, userPrompt);
+    }
+  } catch (err: unknown) {
+    // Auto-fallback to local Ollama if quota/rate-limit hit (429) or key missing
+    const msg = err instanceof Error ? err.message : String(err);
+    const isQuotaError = msg.includes('429') || msg.includes('rate') || msg.includes('quota') || msg.includes('not set');
+    if (isQuotaError && process.env.OLLAMA_BASE_URL) {
+      console.warn(`[LLM] ${config.provider} quota hit — falling back to local Ollama`);
+      return callOllama(config, systemPrompt, userPrompt);
+    }
+    throw err;
+  }
+}
+
+async function callOllama(
+  config: LLMConfig,
+  systemPrompt: string,
+  userPrompt: string
+): Promise<string> {
+  const base = process.env.OLLAMA_BASE_URL ?? 'http://localhost:11434';
+  const model = process.env.OLLAMA_MODEL ?? 'llama3.2';
+
+  const res = await fetch(`${base}/api/chat`, {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify({
+      model,
+      stream: false,
+      options: {
+        num_predict: config.maxTokens ?? 500,
+        temperature: config.temperature ?? 0.7,
+      },
+      messages: [
+        { role: 'system', content: systemPrompt },
+        { role: 'user', content: userPrompt },
+      ],
+    }),
+  });
+
+  if (!res.ok) {
+    const err = await res.text();
+    throw new Error(`Ollama error: ${err}`);
+  }
+
+  const json = await res.json();
+  return json.message?.content?.trim() ?? '';
 }
 
 async function callGroq(
