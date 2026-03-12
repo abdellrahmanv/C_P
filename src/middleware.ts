@@ -1,7 +1,8 @@
 import { NextRequest, NextResponse } from "next/server";
 import { createServerClient } from "@supabase/ssr";
 
-const protectedRoutes = ["/dashboard", "/onboarding", "/sales", "/nexus", "/voice", "/command"];
+const protectedRoutes = ["/dashboard", "/onboarding", "/sales", "/nexus", "/voice"];
+const adminRoutes = ["/command"];
 
 export async function middleware(request: NextRequest) {
   const { pathname } = request.nextUrl;
@@ -16,9 +17,9 @@ export async function middleware(request: NextRequest) {
     return NextResponse.next();
   }
 
-  // Check if this is a protected route
   const isProtected = protectedRoutes.some((r) => pathname.startsWith(r));
-  if (!isProtected) return NextResponse.next();
+  const isAdmin = adminRoutes.some((r) => pathname.startsWith(r));
+  if (!isProtected && !isAdmin) return NextResponse.next();
 
   const supabaseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL;
   const supabaseAnonKey = process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY;
@@ -54,6 +55,14 @@ export async function middleware(request: NextRequest) {
     const loginUrl = new URL("/login", request.url);
     loginUrl.searchParams.set("redirect", pathname);
     return NextResponse.redirect(loginUrl);
+  }
+
+  // Admin-only routes: check email against ADMIN_EMAIL
+  if (isAdmin) {
+    const adminEmail = process.env.ADMIN_EMAIL;
+    if (!adminEmail || user.email !== adminEmail) {
+      return NextResponse.redirect(new URL("/dashboard", request.url));
+    }
   }
 
   return response;
