@@ -584,6 +584,7 @@ export default function CommandCenter() {
           <Link href="/dashboard" className="hover:text-[#00e87b] transition">Dashboard</Link>
           <Link href="/sales" className="hover:text-[#00e87b] transition">Sales Agent</Link>
           <Link href="/nexus" className="hover:text-[#00e87b] transition">NEXUS</Link>
+          <Link href="/voice" className="hover:text-[#00e87b] transition">Voice</Link>
           <Link href="/demo" className="hover:text-[#00e87b] transition">Demo</Link>
           <a href="https://github.com/abdellrahmanv/C_P" target="_blank" rel="noopener noreferrer" className="hover:text-[#00e87b] transition">GitHub</a>
         </div>
