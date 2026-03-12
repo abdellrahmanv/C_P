@@ -1,4 +1,4 @@
-'use client';
+﻿'use client';
 
 import { useState, useEffect, Suspense } from 'react';
 import { useSearchParams } from 'next/navigation';
@@ -70,7 +70,7 @@ function LoginForm() {
           <span className="text-xl font-bold text-white">CashPulse</span>
         </Link>
 
-        <div className="bg-[#111] border border-[#222] rounded-2xl p-8">
+        <div className="bg-[#111] border border-white/[0.06] rounded-2xl p-8">
           <h1 className="text-2xl font-bold text-white mb-2">
             {mode === 'login' && 'Welcome back'}
             {mode === 'signup' && 'Start collecting'}
@@ -78,7 +78,7 @@ function LoginForm() {
           </h1>
           <p className="text-gray-400 mb-6">
             {mode === 'login' && 'Log in to your CashPulse dashboard'}
-            {mode === 'signup' && 'Create your account — free to start'}
+            {mode === 'signup' && 'Create your account â€” free to start'}
             {mode === 'forgot' && 'Enter your email to reset your password'}
           </p>
 
@@ -101,7 +101,7 @@ function LoginForm() {
                 value={email}
                 onChange={(e) => setEmail(e.target.value)}
                 required
-                className="w-full bg-[#0a0a0a] border border-[#333] rounded-lg px-4 py-3 text-white focus:border-[#00e87b] focus:outline-none transition"
+                className="w-full bg-[#0a0a0a] border border-white/[0.1] rounded-lg px-4 py-3 text-white focus:border-[#00e87b] focus:outline-none transition"
                 placeholder="you@company.com"
               />
             </div>
@@ -115,8 +115,8 @@ function LoginForm() {
                   onChange={(e) => setPassword(e.target.value)}
                   required
                   minLength={6}
-                  className="w-full bg-[#0a0a0a] border border-[#333] rounded-lg px-4 py-3 text-white focus:border-[#00e87b] focus:outline-none transition"
-                  placeholder="••••••••"
+                  className="w-full bg-[#0a0a0a] border border-white/[0.1] rounded-lg px-4 py-3 text-white focus:border-[#00e87b] focus:outline-none transition"
+                  placeholder="â€¢â€¢â€¢â€¢â€¢â€¢â€¢â€¢"
                 />
               </div>
             )}

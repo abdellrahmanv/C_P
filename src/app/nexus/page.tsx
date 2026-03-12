@@ -1,7 +1,7 @@
-'use client';
+﻿'use client';
 
 /**
- * NEXUS — Command Center Dashboard (/nexus)
+ * NEXUS â€” Command Center Dashboard (/nexus)
  * 
  * Shows real-time AI company OS status:
  * - System health score
@@ -14,7 +14,7 @@
 import { useState, useEffect, useCallback } from 'react';
 import Link from 'next/link';
 
-// ─── Types ────────────────────────────────────────────────────────────────────
+// â”€â”€â”€ Types â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
 type HealthStatus = 'GREEN' | 'YELLOW' | 'RED' | 'UNKNOWN';
 
 interface DomainScore {
@@ -42,7 +42,7 @@ interface StatusData {
   estimatedImpact?: string;
 }
 
-// ─── Helpers ──────────────────────────────────────────────────────────────────
+// â”€â”€â”€ Helpers â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
 const STATUS_COLOR: Record<HealthStatus, string> = {
   GREEN:   'text-[#00e87b]',
   YELLOW:  'text-yellow-400',
@@ -72,11 +72,11 @@ const SEVERITY_COLOR: Record<string, string> = {
 };
 
 const DOMAIN_LABELS: Record<string, string> = {
-  PRODUCT_QUALITY: '🔧 Product',
-  CODE_QUALITY:    '🛡️  Verification',
-  SALES_PIPELINE:  '📈 Sales',
-  REVENUE:         '💰 Revenue',
-  VALIDATION:      '✅ Validation',
+  PRODUCT_QUALITY: 'ðŸ”§ Product',
+  CODE_QUALITY:    'ðŸ›¡ï¸  Verification',
+  SALES_PIPELINE:  'ðŸ“ˆ Sales',
+  REVENUE:         'ðŸ’° Revenue',
+  VALIDATION:      'âœ… Validation',
 };
 
 function ScoreRing({ score, status }: { score: number; status: HealthStatus }) {
@@ -154,13 +154,13 @@ function IssueCard({ issue, idx }: { issue: TopIssue; idx: number }) {
             </div>
           )}
         </div>
-        <span className="text-gray-600 text-xs mt-0.5 shrink-0">{expanded ? '▲' : '▼'}</span>
+        <span className="text-gray-600 text-xs mt-0.5 shrink-0">{expanded ? 'â–²' : 'â–¼'}</span>
       </div>
     </div>
   );
 }
 
-// ─── Main Page ────────────────────────────────────────────────────────────────
+// â”€â”€â”€ Main Page â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
 export default function NexusPage() {
   const [data, setData] = useState<StatusData | null>(null);
   const [loading, setLoading] = useState(true);
@@ -205,8 +205,8 @@ export default function NexusPage() {
 
   return (
     <div className="min-h-screen bg-[#0a0a0a] text-white">
-      {/* ── Nav ──────────────────────────────────────────────────────── */}
-      <nav className="border-b border-[#222] px-6 py-4">
+      {/* â”€â”€ Nav â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€ */}
+      <nav className="border-b border-white/[0.06] px-6 py-4">
         <div className="max-w-5xl mx-auto flex justify-between items-center">
           <Link href="/" className="flex items-center gap-2">
             <div className="w-8 h-8 rounded-lg bg-[#00e87b] flex items-center justify-center">
@@ -214,24 +214,20 @@ export default function NexusPage() {
             </div>
             <span className="text-xl font-bold">CashPulse</span>
           </Link>
-          <div className="flex items-center gap-3">
-            <Link href="/dashboard" className="text-sm text-gray-400 hover:text-white transition">Dashboard</Link>
-            <Link href="/sales" className="text-sm text-gray-400 hover:text-white transition">Sales Agent</Link>
-            <span className="text-sm text-[#00e87b] font-semibold">NEXUS</span>
-          </div>
+          <span className="text-sm text-[#00e87b] font-semibold">NEXUS</span>
         </div>
       </nav>
 
       <div className="p-6 lg:p-10">
       <div className="max-w-5xl mx-auto space-y-8">
 
-        {/* ── Header ─────────────────────────────────────────────────── */}
+        {/* â”€â”€ Header â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€ */}
         <div className="flex items-center justify-between flex-wrap gap-4">
           <div>
             <h1 className="text-3xl font-bold tracking-tight">
               <span className="text-[#00e87b]">NEXUS</span> Command Center
             </h1>
-            <p className="text-gray-400 text-sm mt-1">AI Company Operating System — Measure → Detect → Fix → Loop</p>
+            <p className="text-gray-400 text-sm mt-1">AI Company Operating System â€” Measure â†’ Detect â†’ Fix â†’ Loop</p>
           </div>
           <button
             onClick={triggerEval}
@@ -239,9 +235,9 @@ export default function NexusPage() {
             className="px-5 py-2.5 rounded-xl font-semibold text-sm bg-[#00e87b] text-black hover:bg-[#00c96a] disabled:opacity-50 disabled:cursor-not-allowed transition-colors flex items-center gap-2"
           >
             {running ? (
-              <><span className="animate-spin">⟳</span> Running Eval...</>
+              <><span className="animate-spin">âŸ³</span> Running Eval...</>
             ) : (
-              '▶ Run Eval Now'
+              'â–¶ Run Eval Now'
             )}
           </button>
         </div>
@@ -250,7 +246,7 @@ export default function NexusPage() {
           <div className="bg-red-500/10 border border-red-500/30 rounded-xl p-4 text-red-400 text-sm">{error}</div>
         )}
 
-        {/* ── System Health ───────────────────────────────────────────── */}
+        {/* â”€â”€ System Health â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€ */}
         {loading ? (
           <div className="text-gray-500 text-center py-20 animate-pulse">Loading NEXUS status...</div>
         ) : (
@@ -274,7 +270,7 @@ export default function NexusPage() {
               </div>
             </div>
 
-            {/* ── Domain Scores ─────────────────────────────────────────── */}
+            {/* â”€â”€ Domain Scores â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€ */}
             {data?.domainScores && data.domainScores.length > 0 && (
               <div>
                 <h2 className="text-lg font-semibold mb-3 text-gray-100">Domain Scores</h2>
@@ -284,11 +280,11 @@ export default function NexusPage() {
               </div>
             )}
 
-            {/* ── Top Issues + Fix Plans ─────────────────────────────────── */}
+            {/* â”€â”€ Top Issues + Fix Plans â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€ */}
             {data?.topIssues && data.topIssues.length > 0 && (
               <div>
                 <h2 className="text-lg font-semibold mb-3 text-gray-100">
-                  Issues — Ranked by Priority
+                  Issues â€” Ranked by Priority
                   <span className="ml-2 text-xs font-normal text-gray-500">(click to expand AI fix plan)</span>
                 </h2>
                 <div className="space-y-2">
@@ -299,7 +295,7 @@ export default function NexusPage() {
               </div>
             )}
 
-            {/* ── Board Summary ──────────────────────────────────────────── */}
+            {/* â”€â”€ Board Summary â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€ */}
             {data?.boardSummary && (
               <div>
                 <h2 className="text-lg font-semibold mb-3 text-gray-100">Board Report</h2>
@@ -309,24 +305,24 @@ export default function NexusPage() {
               </div>
             )}
 
-            {/* ── Empty State ────────────────────────────────────────────── */}
+            {/* â”€â”€ Empty State â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€ */}
             {!data?.domainScores?.length && (
               <div className="text-center py-16 text-gray-500">
-                <div className="text-5xl mb-4">🔭</div>
+                <div className="text-5xl mb-4">ðŸ”­</div>
                 <p className="text-lg font-medium text-gray-300 mb-2">NEXUS is ready</p>
                 <p className="text-sm mb-6">No eval data yet. Click &quot;Run Eval Now&quot; to start the first measurement cycle.</p>
                 <button onClick={triggerEval} disabled={running}
                   className="px-6 py-3 bg-[#00e87b] text-black font-semibold rounded-xl hover:bg-[#00c96a] transition-colors disabled:opacity-50">
-                  {running ? 'Running...' : '▶ Start First Eval'}
+                  {running ? 'Running...' : 'â–¶ Start First Eval'}
                 </button>
               </div>
             )}
           </>
         )}
 
-        {/* ── Footer ─────────────────────────────────────────────────── */}
+        {/* â”€â”€ Footer â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€ */}
         <p className="text-center text-xs text-gray-600 pb-4">
-          NEXUS evaluates every 6 hours via Vercel cron • DeepSeek-R1 generates fix plans • Stores in Supabase
+          NEXUS evaluates every 6 hours via Vercel cron â€¢ DeepSeek-R1 generates fix plans â€¢ Stores in Supabase
         </p>
       </div>
       </div>

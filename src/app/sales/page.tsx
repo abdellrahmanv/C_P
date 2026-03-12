@@ -1,4 +1,4 @@
-"use client";
+﻿"use client";
 
 import { useState, useCallback, useEffect } from "react";
 import {
@@ -105,7 +105,7 @@ export default function SalesAgent() {
   // Scout for new leads
   const handleScout = useCallback(async () => {
     setIsLoading(true);
-    addLog("🔍 Scouting for new leads...");
+    addLog("ðŸ” Scouting for new leads...");
 
     try {
       const response = await fetch("/api/scout", {
@@ -116,7 +116,7 @@ export default function SalesAgent() {
       const data = await response.json();
 
       if (data.success) {
-        addLog(`✅ Found ${data.count} leads, ${data.saved} new saved (${data.source})`);
+        addLog(`âœ… Found ${data.count} leads, ${data.saved} new saved (${data.source})`);
 
         // Reload from Supabase to get persisted data
         const { data: dbLeads } = await supabase
@@ -149,7 +149,7 @@ export default function SalesAgent() {
         }
       }
     } catch {
-      addLog("❌ Scout failed — check connection");
+      addLog("âŒ Scout failed â€” check connection");
     }
 
     setIsLoading(false);
@@ -161,7 +161,7 @@ export default function SalesAgent() {
       const sequence = getColdEmailSequence(lead, senderName);
       const step = sequence[lead.sequenceStep] || sequence[0];
 
-      addLog(`📧 Sending email to ${lead.contactName} @ ${lead.companyName} (Step ${step.step})...`);
+      addLog(`ðŸ“§ Sending email to ${lead.contactName} @ ${lead.companyName} (Step ${step.step})...`);
 
       try {
         const response = await fetch("/api/cold-email", {
@@ -190,10 +190,10 @@ export default function SalesAgent() {
           );
           setLeads(updatedLeads);
           setMetrics(calculateSalesMetrics(updatedLeads));
-          addLog(`✅ Email sent to ${lead.contactName} (${data.mode || "live"}, personalized: ${data.personalized || false})`);
+          addLog(`âœ… Email sent to ${lead.contactName} (${data.mode || "live"}, personalized: ${data.personalized || false})`);
         }
       } catch {
-        addLog(`❌ Failed to send email to ${lead.contactName}`);
+        addLog(`âŒ Failed to send email to ${lead.contactName}`);
       }
     },
     [leads, senderName, addLog]
@@ -215,7 +215,7 @@ export default function SalesAgent() {
       })
       .slice(0, dailyLimit);
 
-    addLog(`🚀 Auto-run started: ${dueLeads.length} leads ready`);
+    addLog(`ðŸš€ Auto-run started: ${dueLeads.length} leads ready`);
 
     for (const lead of dueLeads) {
       await handleSendEmail(lead);
@@ -223,17 +223,17 @@ export default function SalesAgent() {
       await new Promise((resolve) => setTimeout(resolve, 200));
     }
 
-    addLog(`✅ Auto-run complete: processed ${dueLeads.length} leads`);
+    addLog(`âœ… Auto-run complete: processed ${dueLeads.length} leads`);
   }, [leads, senderName, dailyLimit, handleSendEmail, addLog]);
 
   // Toggle agent on/off
   const toggleAgent = useCallback(() => {
     if (isRunning) {
       setIsRunning(false);
-      addLog("⏸ Sales agent paused");
+      addLog("â¸ Sales agent paused");
     } else {
       setIsRunning(true);
-      addLog("▶ Sales agent started");
+      addLog("â–¶ Sales agent started");
       handleAutoRun();
     }
   }, [isRunning, handleAutoRun, addLog]);
@@ -264,7 +264,7 @@ export default function SalesAgent() {
   return (
     <div className="min-h-screen bg-[#0a0a0a] text-white">
       {/* Header */}
-      <nav className="border-b border-[#222] px-6 py-4">
+      <nav className="border-b border-white/[0.06] px-6 py-4">
         <div className="max-w-7xl mx-auto flex justify-between items-center">
           <div className="flex items-center gap-4">
             <Link href="/" className="flex items-center gap-2">
@@ -273,32 +273,24 @@ export default function SalesAgent() {
               </div>
               <span className="text-xl font-bold">CashPulse</span>
             </Link>
-            <span className="text-[#333]">|</span>
+            <span className="text-white/[0.15]">|</span>
             <span className="text-sm text-[#888]">Sales Agent</span>
-            <div className={`flex items-center gap-1.5 px-2.5 py-1 rounded-full text-xs ${isRunning ? "bg-green-500/10 text-green-400" : "bg-[#222] text-[#888]"}`}>
+            <div className={`flex items-center gap-1.5 px-2.5 py-1 rounded-full text-xs ${isRunning ? "bg-green-500/10 text-green-400" : "bg-white/[0.04] text-[#888]"}`}>
               <div className={`w-1.5 h-1.5 rounded-full ${isRunning ? "bg-green-400 animate-pulse" : "bg-[#555]"}`} />
               {isRunning ? "Running" : "Paused"}
             </div>
           </div>
-          <div className="flex items-center gap-3">
-            <Link href="/dashboard" className="text-sm text-[#888] hover:text-white transition">
-              Product Dashboard
-            </Link>
-            <Link href="/nexus" className="text-sm text-[#888] hover:text-white transition">
-              NEXUS
-            </Link>
-            <button
-              onClick={toggleAgent}
-              className={`flex items-center gap-2 px-4 py-2 rounded-lg text-sm font-semibold transition ${
-                isRunning
-                  ? "bg-red-500/20 text-red-400 hover:bg-red-500/30"
-                  : "bg-[#00e87b] text-black hover:bg-[#00c966]"
-              }`}
-            >
-              {isRunning ? <Pause className="w-4 h-4" /> : <Play className="w-4 h-4" />}
-              {isRunning ? "Stop Agent" : "Start Agent"}
-            </button>
-          </div>
+          <button
+            onClick={toggleAgent}
+            className={`flex items-center gap-2 px-4 py-2 rounded-lg text-sm font-semibold transition ${
+              isRunning
+                ? "bg-red-500/20 text-red-400 hover:bg-red-500/30"
+                : "bg-[#00e87b] text-black hover:bg-[#00c966]"
+            }`}
+          >
+            {isRunning ? <Pause className="w-4 h-4" /> : <Play className="w-4 h-4" />}
+            {isRunning ? "Stop Agent" : "Start Agent"}
+          </button>
         </div>
       </nav>
 
@@ -315,7 +307,7 @@ export default function SalesAgent() {
         )}
 
         {/* Tabs */}
-        <div className="flex gap-1 mb-8 bg-[#111] rounded-xl p-1 border border-[#222] overflow-x-auto">
+        <div className="flex gap-1 mb-8 bg-[#111] rounded-xl p-1 border border-white/[0.06] overflow-x-auto">
           {([
             { id: "pipeline", label: "Pipeline", icon: BarChart3 },
             { id: "leads", label: "All Leads", icon: Users },
@@ -345,10 +337,10 @@ export default function SalesAgent() {
                 contacted: "Contacted",
                 replied: "Replied",
                 trial: "In Trial",
-                customer: "Customer 💰",
+                customer: "Customer ðŸ’°",
               };
               return (
-                <div key={status} className="bg-[#111] border border-[#222] rounded-2xl p-4">
+                <div key={status} className="bg-[#111] border border-white/[0.06] rounded-2xl p-4">
                   <div className="flex items-center justify-between mb-4">
                     <h3 className="font-medium text-sm">{stageLabels[status]}</h3>
                     <span className="text-xs bg-[#222] px-2 py-0.5 rounded-full">{stageLeads.length}</span>
@@ -400,14 +392,14 @@ export default function SalesAgent() {
                     value={searchQuery}
                     onChange={(e) => setSearchQuery(e.target.value)}
                     placeholder="Search leads..."
-                    className="w-full bg-[#111] border border-[#333] rounded-lg pl-9 pr-4 py-2.5 text-sm focus:border-[#00e87b] focus:outline-none"
+                    className="w-full bg-[#111] border border-white/[0.1] rounded-lg pl-9 pr-4 py-2.5 text-sm focus:border-[#00e87b] focus:outline-none"
                   />
                 </div>
               </div>
               <select
                 value={filterStatus}
                 onChange={(e) => setFilterStatus(e.target.value)}
-                className="bg-[#111] border border-[#333] rounded-lg px-3 py-2.5 text-sm focus:border-[#00e87b] focus:outline-none"
+                className="bg-[#111] border border-white/[0.1] rounded-lg px-3 py-2.5 text-sm focus:border-[#00e87b] focus:outline-none"
               >
                 <option value="all">All Status</option>
                 <option value="new">New</option>
@@ -428,11 +420,11 @@ export default function SalesAgent() {
             </div>
 
             {/* Lead table */}
-            <div className="bg-[#111] border border-[#222] rounded-2xl overflow-hidden">
+            <div className="bg-[#111] border border-white/[0.06] rounded-2xl overflow-hidden">
               <div className="overflow-x-auto">
                 <table className="w-full text-sm">
                   <thead>
-                    <tr className="border-b border-[#222]">
+                    <tr className="border-b border-white/[0.06]">
                       <th className="px-4 py-3 text-left text-[#888] font-medium">Company</th>
                       <th className="px-4 py-3 text-left text-[#888] font-medium">Contact</th>
                       <th className="px-4 py-3 text-left text-[#888] font-medium">Industry</th>
@@ -445,7 +437,7 @@ export default function SalesAgent() {
                   </thead>
                   <tbody>
                     {filteredLeads.map((lead) => (
-                      <tr key={lead.id} className="border-b border-[#222]/50 hover:bg-[#1a1a1a] transition">
+                      <tr key={lead.id} className="border-b border-white/[0.06]/50 hover:bg-[#1a1a1a] transition">
                         <td className="px-4 py-3">
                           <div className="font-medium">{lead.companyName}</div>
                           <div className="text-xs text-[#555]">{lead.website}</div>
@@ -512,7 +504,7 @@ export default function SalesAgent() {
                 },
                 senderName
               ).map((step) => (
-                <div key={step.step} className="bg-[#111] border border-[#222] rounded-2xl p-5">
+                <div key={step.step} className="bg-[#111] border border-white/[0.06] rounded-2xl p-5">
                   <div className="flex items-center justify-between mb-3">
                     <div className="flex items-center gap-2">
                       <span className={`text-xs px-2 py-0.5 rounded-full ${
@@ -540,13 +532,13 @@ export default function SalesAgent() {
             {/* Activity log */}
             <div>
               <h3 className="font-bold mb-4">Activity Log</h3>
-              <div className="bg-[#111] border border-[#222] rounded-2xl p-5">
+              <div className="bg-[#111] border border-white/[0.06] rounded-2xl p-5">
                 <div className="space-y-2 max-h-[600px] overflow-y-auto font-mono text-xs">
                   {activityLog.length === 0 ? (
                     <p className="text-[#555]">No activity yet. Start the agent or send an email.</p>
                   ) : (
                     activityLog.map((log, i) => (
-                      <div key={i} className="text-[#888] py-1 border-b border-[#222]/50">
+                      <div key={i} className="text-[#888] py-1 border-b border-white/[0.06]/50">
                         {log}
                       </div>
                     ))
@@ -579,7 +571,7 @@ export default function SalesAgent() {
         {/* Settings View */}
         {activeView === "settings" && (
           <div className="max-w-2xl space-y-6">
-            <div className="bg-[#111] border border-[#222] rounded-2xl p-6">
+            <div className="bg-[#111] border border-white/[0.06] rounded-2xl p-6">
               <h3 className="font-bold mb-6">API Keys</h3>
               <p className="text-sm text-[#888] mb-6">
                 All APIs have free tiers. The agent works in demo mode without keys.
@@ -597,7 +589,7 @@ export default function SalesAgent() {
                     value={apolloKey}
                     onChange={(e) => setApolloKey(e.target.value)}
                     placeholder="10,000 leads/month free"
-                    className="w-full bg-[#0a0a0a] border border-[#333] rounded-lg px-4 py-2.5 text-sm focus:border-[#00e87b] focus:outline-none"
+                    className="w-full bg-[#0a0a0a] border border-white/[0.1] rounded-lg px-4 py-2.5 text-sm focus:border-[#00e87b] focus:outline-none"
                   />
                 </div>
                 <div>
@@ -612,7 +604,7 @@ export default function SalesAgent() {
                     value={groqKey}
                     onChange={(e) => setGroqKey(e.target.value)}
                     placeholder="Free Llama 3.1 70B for email personalization"
-                    className="w-full bg-[#0a0a0a] border border-[#333] rounded-lg px-4 py-2.5 text-sm focus:border-[#00e87b] focus:outline-none"
+                    className="w-full bg-[#0a0a0a] border border-white/[0.1] rounded-lg px-4 py-2.5 text-sm focus:border-[#00e87b] focus:outline-none"
                   />
                 </div>
                 <div>
@@ -627,13 +619,13 @@ export default function SalesAgent() {
                     value={resendKey}
                     onChange={(e) => setResendKey(e.target.value)}
                     placeholder="3,000 emails/month free"
-                    className="w-full bg-[#0a0a0a] border border-[#333] rounded-lg px-4 py-2.5 text-sm focus:border-[#00e87b] focus:outline-none"
+                    className="w-full bg-[#0a0a0a] border border-white/[0.1] rounded-lg px-4 py-2.5 text-sm focus:border-[#00e87b] focus:outline-none"
                   />
                 </div>
               </div>
             </div>
 
-            <div className="bg-[#111] border border-[#222] rounded-2xl p-6">
+            <div className="bg-[#111] border border-white/[0.06] rounded-2xl p-6">
               <h3 className="font-bold mb-6">Agent Settings</h3>
               <div className="space-y-4">
                 <div>
@@ -642,7 +634,7 @@ export default function SalesAgent() {
                     type="text"
                     value={senderName}
                     onChange={(e) => setSenderName(e.target.value)}
-                    className="w-full bg-[#0a0a0a] border border-[#333] rounded-lg px-4 py-2.5 text-sm focus:border-[#00e87b] focus:outline-none"
+                    className="w-full bg-[#0a0a0a] border border-white/[0.1] rounded-lg px-4 py-2.5 text-sm focus:border-[#00e87b] focus:outline-none"
                   />
                 </div>
                 <div>
@@ -653,13 +645,13 @@ export default function SalesAgent() {
                     onChange={(e) => setDailyLimit(parseInt(e.target.value) || 100)}
                     min={1}
                     max={500}
-                    className="w-full bg-[#0a0a0a] border border-[#333] rounded-lg px-4 py-2.5 text-sm focus:border-[#00e87b] focus:outline-none"
+                    className="w-full bg-[#0a0a0a] border border-white/[0.1] rounded-lg px-4 py-2.5 text-sm focus:border-[#00e87b] focus:outline-none"
                   />
                 </div>
               </div>
             </div>
 
-            <div className="bg-[#111] border border-[#222] rounded-2xl p-6">
+            <div className="bg-[#111] border border-white/[0.06] rounded-2xl p-6">
               <h3 className="font-bold mb-4">PayPal Setup</h3>
               <p className="text-sm text-[#888] mb-4">
                 Create subscription plans in your PayPal Developer Dashboard.
@@ -696,7 +688,7 @@ export default function SalesAgent() {
               </div>
             </div>
 
-            <div className="bg-[#111] border border-[#222] rounded-2xl p-6">
+            <div className="bg-[#111] border border-white/[0.06] rounded-2xl p-6">
               <h3 className="font-bold mb-4">Deploy to Vercel (Free)</h3>
               <div className="space-y-3 text-sm">
                 <div className="flex items-start gap-3 p-3 bg-[#0a0a0a] rounded-xl">
@@ -724,7 +716,7 @@ export default function SalesAgent() {
                   <span className="text-[#00e87b] font-bold">4.</span>
                   <div>
                     <p className="font-medium">Set up Vercel Cron (free)</p>
-                    <p className="text-[#888] text-xs">Auto-run scout & sequences daily — add vercel.json cron config</p>
+                    <p className="text-[#888] text-xs">Auto-run scout & sequences daily â€” add vercel.json cron config</p>
                   </div>
                 </div>
               </div>
@@ -735,11 +727,11 @@ export default function SalesAgent() {
         {/* Lead Detail Modal */}
         {selectedLead && (
           <div className="fixed inset-0 z-50 bg-black/60 flex items-center justify-center p-4" onClick={() => setSelectedLead(null)}>
-            <div className="bg-[#111] border border-[#222] rounded-2xl p-6 max-w-lg w-full max-h-[80vh] overflow-y-auto" onClick={(e) => e.stopPropagation()}>
+            <div className="bg-[#111] border border-white/[0.06] rounded-2xl p-6 max-w-lg w-full max-h-[80vh] overflow-y-auto" onClick={(e) => e.stopPropagation()}>
               <div className="flex justify-between items-start mb-4">
                 <div>
                   <h3 className="text-xl font-bold">{selectedLead.companyName}</h3>
-                  <p className="text-[#888]">{selectedLead.contactName} · {selectedLead.contactTitle}</p>
+                  <p className="text-[#888]">{selectedLead.contactName} Â· {selectedLead.contactTitle}</p>
                 </div>
                 <button onClick={() => setSelectedLead(null)} className="text-[#888] hover:text-white">
                   <XCircle className="w-5 h-5" />
@@ -822,7 +814,7 @@ function MetricCard({
   color: string;
 }) {
   return (
-    <div className="bg-[#111] border border-[#222] rounded-2xl p-5">
+    <div className="bg-[#111] border border-white/[0.06] rounded-2xl p-5 hover:border-white/[0.12] transition-colors">
       <div className="flex items-center gap-2 mb-2">
         <Icon className="w-4 h-4" style={{ color }} />
         <span className="text-xs text-[#888] uppercase tracking-wider">{label}</span>

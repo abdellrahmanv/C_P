@@ -1,4 +1,4 @@
-'use client';
+﻿'use client';
 
 import { useState, useRef } from 'react';
 import { supabase } from '@/lib/supabase';
@@ -8,7 +8,7 @@ import { parseInvoices } from '@/lib/engine';
 const STEPS = [
   { title: 'Your Company', desc: 'Tell us about your business' },
   { title: 'Upload Invoices', desc: 'Import your outstanding invoices' },
-  { title: 'Choose Plan', desc: 'Start collecting — free trial included' },
+  { title: 'Choose Plan', desc: 'Start collecting â€” free trial included' },
 ];
 
 export default function OnboardingPage() {
@@ -91,7 +91,7 @@ export default function OnboardingPage() {
                     : 'bg-[#222] text-gray-500'
                 }`}
               >
-                {i < step ? '✓' : i + 1}
+                {i < step ? 'âœ“' : i + 1}
               </div>
               {i < STEPS.length - 1 && (
                 <div className={`w-12 h-0.5 ${i < step ? 'bg-[#00e87b]' : 'bg-[#222]'}`} />
@@ -100,7 +100,7 @@ export default function OnboardingPage() {
           ))}
         </div>
 
-        <div className="bg-[#111] border border-[#222] rounded-2xl p-8">
+        <div className="bg-[#111] border border-white/[0.06] rounded-2xl p-8">
           <h2 className="text-2xl font-bold text-white mb-1">{STEPS[step].title}</h2>
           <p className="text-gray-400 mb-6">{STEPS[step].desc}</p>
 
@@ -113,7 +113,7 @@ export default function OnboardingPage() {
                   type="text"
                   value={companyName}
                   onChange={(e) => setCompanyName(e.target.value)}
-                  className="w-full bg-[#0a0a0a] border border-[#333] rounded-lg px-4 py-3 text-white focus:border-[#00e87b] focus:outline-none transition"
+                  className="w-full bg-[#0a0a0a] border border-white/[0.1] rounded-lg px-4 py-3 text-white focus:border-[#00e87b] focus:outline-none transition"
                   placeholder="Acme Corp"
                 />
               </div>
@@ -122,7 +122,7 @@ export default function OnboardingPage() {
                 <select
                   value={industry}
                   onChange={(e) => setIndustry(e.target.value)}
-                  className="w-full bg-[#0a0a0a] border border-[#333] rounded-lg px-4 py-3 text-white focus:border-[#00e87b] focus:outline-none transition"
+                  className="w-full bg-[#0a0a0a] border border-white/[0.1] rounded-lg px-4 py-3 text-white focus:border-[#00e87b] focus:outline-none transition"
                 >
                   <option value="">Select industry</option>
                   <option value="manufacturing">Manufacturing</option>
@@ -141,7 +141,7 @@ export default function OnboardingPage() {
                 <select
                   value={invoiceCount}
                   onChange={(e) => setInvoiceCount(e.target.value)}
-                  className="w-full bg-[#0a0a0a] border border-[#333] rounded-lg px-4 py-3 text-white focus:border-[#00e87b] focus:outline-none transition"
+                  className="w-full bg-[#0a0a0a] border border-white/[0.1] rounded-lg px-4 py-3 text-white focus:border-[#00e87b] focus:outline-none transition"
                 >
                   <option value="">Select range</option>
                   <option value="1-10">1-10</option>
@@ -164,7 +164,7 @@ export default function OnboardingPage() {
           {step === 1 && (
             <div className="space-y-4">
               <div
-                className="border-2 border-dashed border-[#333] rounded-xl p-8 text-center hover:border-[#00e87b] transition cursor-pointer"
+                className="border-2 border-dashed border-white/[0.1] rounded-xl p-8 text-center hover:border-[#00e87b] transition cursor-pointer"
                 onClick={() => fileRef.current?.click()}
                 onDragOver={(e) => e.preventDefault()}
                 onDrop={(e) => {
@@ -173,10 +173,10 @@ export default function OnboardingPage() {
                   if (file?.name.endsWith('.csv')) handleFileUpload(file);
                 }}
               >
-                <div className="text-4xl mb-3">📄</div>
+                <div className="text-4xl mb-3">ðŸ“„</div>
                 {uploadedCount > 0 ? (
                   <>
-                    <p className="text-[#00e87b] font-medium mb-1">✓ {uploadedCount} invoices uploaded</p>
+                    <p className="text-[#00e87b] font-medium mb-1">âœ“ {uploadedCount} invoices uploaded</p>
                     <p className="text-gray-500 text-sm">Click or drop to replace</p>
                   </>
                 ) : (
@@ -201,7 +201,7 @@ export default function OnboardingPage() {
               <div className="flex gap-3">
                 <button
                   onClick={() => setStep(2)}
-                  className="flex-1 border border-[#333] text-gray-400 font-medium py-3 rounded-lg hover:border-[#555] transition"
+                  className="flex-1 border border-white/[0.1] text-gray-400 font-medium py-3 rounded-lg hover:border-[#555] transition"
                 >
                   Skip for now
                 </button>
@@ -229,7 +229,7 @@ export default function OnboardingPage() {
                   className={`border rounded-xl p-4 cursor-pointer transition ${
                     plan.popular
                       ? 'border-[#00e87b] bg-[#00e87b]/5'
-                      : 'border-[#222] hover:border-[#444]'
+                      : 'border-white/[0.06] hover:border-[#444]'
                   }`}
                 >
                   <div className="flex justify-between items-center mb-2">
@@ -245,7 +245,7 @@ export default function OnboardingPage() {
                   </div>
                   <ul className="text-sm text-gray-400 space-y-1">
                     {plan.features.map((f) => (
-                      <li key={f}>✓ {f}</li>
+                      <li key={f}>âœ“ {f}</li>
                     ))}
                   </ul>
                 </div>
@@ -256,13 +256,13 @@ export default function OnboardingPage() {
                 disabled={loading}
                 className="w-full bg-[#00e87b] text-black font-semibold py-3 rounded-lg hover:bg-[#00cc6a] transition disabled:opacity-50"
               >
-                {loading ? 'Setting up...' : 'Start Free Trial →'}
+                {loading ? 'Setting up...' : 'Start Free Trial â†’'}
               </button>
               <button
                 onClick={handleComplete}
                 className="w-full text-gray-500 text-sm hover:text-gray-300 transition"
               >
-                Skip — I&apos;ll choose later
+                Skip â€” I&apos;ll choose later
               </button>
             </div>
           )}

@@ -203,8 +203,10 @@ export default function Dashboard() {
   // Upload screen
   if (invoices.length === 0) {
     return (
-      <div className="min-h-screen bg-[#0a0a0a] text-white">
-        <nav className="border-b border-[#222] px-6 py-4">
+      <div className="min-h-screen bg-[#0a0a0a] text-white relative overflow-hidden">
+        {/* Gradient orb */}
+        <div className="absolute top-[-20%] left-1/2 -translate-x-1/2 w-[600px] h-[600px] bg-[#00e87b]/[0.04] rounded-full blur-[120px] pointer-events-none" />
+        <nav className="border-b border-white/[0.06] px-6 py-4 relative">
           <div className="max-w-4xl mx-auto flex justify-between items-center">
             <Link href="/" className="flex items-center gap-2">
               <div className="w-8 h-8 rounded-lg bg-[#00e87b] flex items-center justify-center">
@@ -215,7 +217,7 @@ export default function Dashboard() {
           </div>
         </nav>
 
-        <div className="max-w-2xl mx-auto px-6 py-20">
+        <div className="max-w-2xl mx-auto px-6 py-20 relative">
           <h1 className="text-3xl font-bold mb-2">Upload your invoices</h1>
           <p className="text-[#888] mb-8">
             Drop a CSV file with your invoice data. We&apos;ll show you exactly
@@ -229,15 +231,15 @@ export default function Dashboard() {
               value={companyName}
               onChange={(e) => setCompanyName(e.target.value)}
               placeholder="e.g. Acme Corp"
-              className="w-full bg-[#111] border border-[#333] rounded-xl px-4 py-3 text-white placeholder-[#555] focus:border-[#00e87b] focus:outline-none transition"
+              className="w-full bg-[#111] border border-white/[0.1] rounded-xl px-4 py-3 text-white placeholder-[#555] focus:border-[#00e87b] focus:outline-none transition"
             />
           </div>
 
           <div
-            className={`border-2 border-dashed rounded-2xl p-12 text-center transition cursor-pointer ${
+            className={`border-2 border-dashed rounded-2xl p-12 text-center transition-all cursor-pointer ${
               dragOver
-                ? "border-[#00e87b] bg-[#00e87b]/5"
-                : "border-[#333] hover:border-[#555]"
+                ? "border-[#00e87b] bg-[#00e87b]/5 scale-[1.01]"
+                : "border-white/[0.1] hover:border-white/[0.2]"
             }`}
             onDragOver={(e) => {
               e.preventDefault();
@@ -269,21 +271,21 @@ export default function Dashboard() {
           <div className="flex gap-4 mt-6">
             <button
               onClick={handleDemoData}
-              className="flex-1 bg-[#111] border border-[#333] rounded-xl px-6 py-3 text-sm hover:border-[#00e87b] transition flex items-center justify-center gap-2"
+              className="flex-1 bg-[#111] border border-white/[0.06] rounded-xl px-6 py-3 text-sm hover:border-[#00e87b] transition-colors flex items-center justify-center gap-2"
             >
               <BarChart3 className="w-4 h-4" />
               Try with demo data
             </button>
             <button
               onClick={downloadSampleCSV}
-              className="flex-1 bg-[#111] border border-[#333] rounded-xl px-6 py-3 text-sm hover:border-[#00e87b] transition flex items-center justify-center gap-2"
+              className="flex-1 bg-[#111] border border-white/[0.06] rounded-xl px-6 py-3 text-sm hover:border-[#00e87b] transition-colors flex items-center justify-center gap-2"
             >
               <Download className="w-4 h-4" />
               Download sample CSV
             </button>
           </div>
 
-          <div className="mt-12 bg-[#111] border border-[#222] rounded-2xl p-6">
+          <div className="mt-12 bg-[#111] border border-white/[0.06] rounded-2xl p-6">
             <h3 className="font-bold mb-3">Expected CSV format:</h3>
             <code className="text-xs text-[#888] block overflow-x-auto whitespace-pre">
 {`customer_name,invoice_number,amount,due_date,issue_date,status,email
@@ -316,7 +318,7 @@ Beta LLC,INV-002,8500,2026-03-01,2026-02-01,paid,billing@beta.com`}
   return (
     <div className="min-h-screen bg-[#0a0a0a] text-white">
       {/* Header */}
-      <nav className="border-b border-[#222] px-6 py-4">
+      <nav className="border-b border-white/[0.06] px-6 py-4">
         <div className="max-w-7xl mx-auto flex justify-between items-center">
           <div className="flex items-center gap-4">
             <Link href="/" className="flex items-center gap-2">
@@ -325,7 +327,7 @@ Beta LLC,INV-002,8500,2026-03-01,2026-02-01,paid,billing@beta.com`}
               </div>
               <span className="text-xl font-bold">CashPulse</span>
             </Link>
-            <span className="text-[#333]">|</span>
+            <span className="text-white/[0.15]">|</span>
             <span className="text-sm text-[#888]">{invoices.length} invoices loaded</span>
           </div>
           <button
@@ -375,7 +377,7 @@ Beta LLC,INV-002,8500,2026-03-01,2026-02-01,paid,billing@beta.com`}
         )}
 
         {/* Tabs */}
-        <div className="flex gap-1 mb-8 bg-[#111] rounded-xl p-1 border border-[#222] overflow-x-auto">
+        <div className="flex gap-1 mb-8 bg-[#111] rounded-xl p-1 border border-white/[0.06] overflow-x-auto">
           {(
             [
               { id: "overview", label: "Overview", icon: BarChart3 },
@@ -404,7 +406,7 @@ Beta LLC,INV-002,8500,2026-03-01,2026-02-01,paid,billing@beta.com`}
         {activeTab === "overview" && (
           <div className="grid md:grid-cols-2 gap-6">
             {/* Aging Chart */}
-            <div className="bg-[#111] border border-[#222] rounded-2xl p-6">
+            <div className="bg-[#111] border border-white/[0.06] rounded-2xl p-6">
               <h3 className="font-bold mb-6">Aging Analysis</h3>
               <div className="space-y-4">
                 {aging.map((bucket) => {
@@ -419,7 +421,7 @@ Beta LLC,INV-002,8500,2026-03-01,2026-02-01,paid,billing@beta.com`}
                           <span className="text-[#888]">({bucket.count})</span>
                         </span>
                       </div>
-                      <div className="h-3 bg-[#222] rounded-full overflow-hidden">
+                      <div className="h-3 bg-white/[0.04] rounded-full overflow-hidden">
                         <div
                           className="h-full rounded-full transition-all duration-1000"
                           style={{
@@ -435,7 +437,7 @@ Beta LLC,INV-002,8500,2026-03-01,2026-02-01,paid,billing@beta.com`}
             </div>
 
             {/* Top Risky Customers */}
-            <div className="bg-[#111] border border-[#222] rounded-2xl p-6">
+            <div className="bg-[#111] border border-white/[0.06] rounded-2xl p-6">
               <h3 className="font-bold mb-6">Top Risky Customers</h3>
               <div className="space-y-3">
                 {customerRisks.slice(0, 8).map((customer) => (
@@ -461,7 +463,7 @@ Beta LLC,INV-002,8500,2026-03-01,2026-02-01,paid,billing@beta.com`}
             </div>
 
             {/* Quick Actions */}
-            <div className="bg-[#111] border border-[#222] rounded-2xl p-6 md:col-span-2">
+            <div className="bg-[#111] border border-white/[0.06] rounded-2xl p-6 md:col-span-2">
               <h3 className="font-bold mb-4">Recommended Actions</h3>
               <div className="grid sm:grid-cols-3 gap-4">
                 <button
@@ -500,11 +502,11 @@ Beta LLC,INV-002,8500,2026-03-01,2026-02-01,paid,billing@beta.com`}
         )}
 
         {activeTab === "invoices" && (
-          <div className="bg-[#111] border border-[#222] rounded-2xl overflow-hidden">
+          <div className="bg-[#111] border border-white/[0.06] rounded-2xl overflow-hidden">
             <div className="overflow-x-auto">
               <table className="w-full text-sm">
                 <thead>
-                  <tr className="border-b border-[#222]">
+                  <tr className="border-b border-white/[0.06]">
                     {[
                       { key: "customerName", label: "Customer" },
                       { key: "invoiceNumber", label: "Invoice #" },
@@ -536,7 +538,7 @@ Beta LLC,INV-002,8500,2026-03-01,2026-02-01,paid,billing@beta.com`}
                   {sortedInvoices.map((inv) => (
                     <tr
                       key={inv.id}
-                      className="border-b border-[#222]/50 hover:bg-[#1a1a1a] transition"
+                      className="border-b border-white/[0.04] hover:bg-white/[0.02] transition"
                     >
                       <td className="px-4 py-3 font-medium">{inv.customerName}</td>
                       <td className="px-4 py-3 text-[#888] font-mono text-xs">{inv.invoiceNumber}</td>
@@ -551,7 +553,7 @@ Beta LLC,INV-002,8500,2026-03-01,2026-02-01,paid,billing@beta.com`}
                       </td>
                       <td className="px-4 py-3">
                         <div className="flex items-center gap-2">
-                          <div className="w-16 h-2 bg-[#222] rounded-full overflow-hidden">
+                          <div className="w-16 h-2 bg-white/[0.04] rounded-full overflow-hidden">
                             <div
                               className="h-full rounded-full"
                               style={{
@@ -631,7 +633,7 @@ Beta LLC,INV-002,8500,2026-03-01,2026-02-01,paid,billing@beta.com`}
 
         {activeTab === "emails" && (
           <div className="space-y-4">
-            <div className="bg-[#111] border border-[#222] rounded-2xl p-6 mb-6">
+            <div className="bg-[#111] border border-white/[0.06] rounded-2xl p-6 mb-6">
               <h3 className="font-bold mb-2">Auto Follow-Up Queue</h3>
               <p className="text-sm text-[#888] mb-4">
                 Personalized emails ready to send. Review and approve each one.
@@ -645,10 +647,10 @@ Beta LLC,INV-002,8500,2026-03-01,2026-02-01,paid,billing@beta.com`}
             {followUps.filter((f) => !f.sent).map((action, idx) => (
               <div
                 key={`${action.invoiceId}-${action.stage}-${idx}`}
-                className="bg-[#111] border border-[#222] rounded-2xl overflow-hidden"
+                className="bg-[#111] border border-white/[0.06] rounded-2xl overflow-hidden"
               >
                 <div
-                  className="flex items-center justify-between p-4 cursor-pointer hover:bg-[#1a1a1a] transition"
+                  className="flex items-center justify-between p-4 cursor-pointer hover:bg-white/[0.02] transition"
                   onClick={() =>
                     setExpandedEmail(
                       expandedEmail === `${action.invoiceId}-${action.stage}`
@@ -680,7 +682,7 @@ Beta LLC,INV-002,8500,2026-03-01,2026-02-01,paid,billing@beta.com`}
                 </div>
 
                 {expandedEmail === `${action.invoiceId}-${action.stage}` && (
-                  <div className="border-t border-[#222] p-4 bg-[#0a0a0a]">
+                  <div className="border-t border-white/[0.06] p-4 bg-[#0a0a0a]">
                     <div className="mb-3">
                       <span className="text-xs text-[#888]">To:</span>
                       <span className="text-sm ml-2">
@@ -737,7 +739,7 @@ Beta LLC,INV-002,8500,2026-03-01,2026-02-01,paid,billing@beta.com`}
 
         {activeTab === "roi" && stats && (
           <div className="space-y-6">
-            <div className="bg-[#111] border border-[#00e87b]/30 rounded-2xl p-8">
+            <div className="bg-[#111] border border-[#00e87b]/20 rounded-2xl p-8">
               <h3 className="text-2xl font-bold mb-6">Your CashPulse ROI</h3>
 
               <div className="grid md:grid-cols-2 gap-8">
@@ -786,7 +788,7 @@ Beta LLC,INV-002,8500,2026-03-01,2026-02-01,paid,billing@beta.com`}
                 </div>
               </div>
 
-              <div className="mt-8 pt-6 border-t border-[#222]">
+              <div className="mt-8 pt-6 border-t border-white/[0.06]">
                 <div className="flex flex-col sm:flex-row justify-between items-center gap-4">
                   <div>
                     <div className="text-sm text-[#888]">CashPulse cost</div>
@@ -811,7 +813,7 @@ Beta LLC,INV-002,8500,2026-03-01,2026-02-01,paid,billing@beta.com`}
             </div>
 
             {/* PayPal CTA */}
-            <div className="bg-[#111] border border-[#222] rounded-2xl p-8 text-center">
+            <div className="bg-[#111] border border-white/[0.06] rounded-2xl p-8 text-center">
               <h3 className="text-xl font-bold mb-2">Ready to stop chasing?</h3>
               <p className="text-[#888] mb-6">
                 Start your Growth plan — auto follow-ups, predictions, and ROI tracking.
@@ -853,7 +855,7 @@ function StatCard({
   sub?: string;
 }) {
   return (
-    <div className="bg-[#111] border border-[#222] rounded-2xl p-5">
+    <div className="bg-[#111] border border-white/[0.06] rounded-2xl p-5 hover:border-white/[0.12] transition-colors">
       <div className="flex items-center gap-2 mb-3">
         <Icon className="w-4 h-4" style={{ color }} />
         <span className="text-xs text-[#888] uppercase tracking-wider">{label}</span>

@@ -1,4 +1,4 @@
-'use client';
+﻿'use client';
 
 import { useState, useEffect } from 'react';
 import Link from 'next/link';
@@ -67,14 +67,14 @@ export default function DemoPage() {
     <div className="min-h-screen bg-[#0a0a0a] text-white">
       {/* Top Bar */}
       <div className="bg-[#00e87b] text-black text-center py-2 text-sm font-medium">
-        🎯 This is a live demo with sample data.{' '}
+        ðŸŽ¯ This is a live demo with sample data.{' '}
         <Link href="/login" className="underline font-bold">
           Sign up free
         </Link>{' '}
         to use with your real invoices.
       </div>
 
-      <header className="border-b border-[#222] px-6 py-4 flex items-center justify-between">
+      <header className="border-b border-white/[0.06] px-6 py-4 flex items-center justify-between">
         <Link href="/" className="flex items-center gap-2">
           <div className="w-8 h-8 bg-[#00e87b] rounded-lg flex items-center justify-center font-bold text-black text-sm">
             C
@@ -86,7 +86,7 @@ export default function DemoPage() {
           href="/login"
           className="bg-[#00e87b] text-black font-semibold px-4 py-2 rounded-lg hover:bg-[#00cc6a] transition text-sm"
         >
-          Start Free Trial →
+          Start Free Trial â†’
         </Link>
       </header>
 
@@ -99,7 +99,7 @@ export default function DemoPage() {
             { label: 'Overdue', value: formatCurrency(stats.totalOverdue), color: 'text-red-400' },
             { label: 'Recovered', value: formatCurrency(stats.recoveredThisMonth), color: 'text-[#00e87b]' },
           ].map((card) => (
-            <div key={card.label} className="bg-[#111] border border-[#222] rounded-xl p-4">
+            <div key={card.label} className="bg-[#111] border border-white/[0.06] rounded-xl p-4">
               <p className="text-xs text-gray-500 mb-1">{card.label}</p>
               <p className={`text-2xl font-bold ${card.color}`}>{card.value}</p>
             </div>
@@ -118,7 +118,7 @@ export default function DemoPage() {
                   : 'text-gray-400 hover:text-white'
               }`}
             >
-              {tab === 'overview' ? '📊 Overview' : tab === 'invoices' ? '📄 Invoices' : '✉️ AI Emails'}
+              {tab === 'overview' ? 'ðŸ“Š Overview' : tab === 'invoices' ? 'ðŸ“„ Invoices' : 'âœ‰ï¸ AI Emails'}
             </button>
           ))}
         </div>
@@ -127,7 +127,7 @@ export default function DemoPage() {
         {activeTab === 'overview' && (
           <div className="grid md:grid-cols-2 gap-6">
             {/* Aging Chart */}
-            <div className="bg-[#111] border border-[#222] rounded-xl p-6">
+            <div className="bg-[#111] border border-white/[0.06] rounded-xl p-6">
               <h3 className="text-lg font-semibold mb-4">Aging Breakdown</h3>
               <div className="space-y-3">
                 {aging.map((bucket) => {
@@ -157,7 +157,7 @@ export default function DemoPage() {
             </div>
 
             {/* Customer Risks */}
-            <div className="bg-[#111] border border-[#222] rounded-xl p-6">
+            <div className="bg-[#111] border border-white/[0.06] rounded-xl p-6">
               <h3 className="text-lg font-semibold mb-4">Customer Risk Scores</h3>
               <div className="space-y-3">
                 {risks.slice(0, 6).map((r) => (
@@ -165,7 +165,7 @@ export default function DemoPage() {
                     <div>
                       <p className="text-white text-sm font-medium">{r.name}</p>
                       <p className="text-xs text-gray-500">
-                        {r.invoiceCount} invoice{r.invoiceCount > 1 ? 's' : ''} · {formatCurrency(r.totalOwed)}
+                        {r.invoiceCount} invoice{r.invoiceCount > 1 ? 's' : ''} Â· {formatCurrency(r.totalOwed)}
                       </p>
                     </div>
                     <div
@@ -190,10 +190,10 @@ export default function DemoPage() {
 
         {/* Invoices Tab */}
         {activeTab === 'invoices' && (
-          <div className="bg-[#111] border border-[#222] rounded-xl overflow-hidden">
+          <div className="bg-[#111] border border-white/[0.06] rounded-xl overflow-hidden">
             <table className="w-full text-sm">
               <thead>
-                <tr className="border-b border-[#222] text-gray-500 text-left">
+                <tr className="border-b border-white/[0.06] text-gray-500 text-left">
                   <th className="px-4 py-3">Invoice</th>
                   <th className="px-4 py-3">Customer</th>
                   <th className="px-4 py-3">Amount</th>
@@ -266,7 +266,7 @@ export default function DemoPage() {
               Here&apos;s what it would send:
             </p>
             {emails.slice(0, 5).map((email, i) => (
-              <div key={i} className="bg-[#111] border border-[#222] rounded-xl p-5">
+              <div key={i} className="bg-[#111] border border-white/[0.06] rounded-xl p-5">
                 <div className="flex items-center justify-between mb-3">
                   <div>
                     <span
@@ -298,10 +298,10 @@ export default function DemoPage() {
                 </div>
                 <div className="flex gap-2 mt-3">
                   <button className="text-xs bg-[#00e87b] text-black px-3 py-1.5 rounded font-medium opacity-50 cursor-not-allowed">
-                    ✓ Send
+                    âœ“ Send
                   </button>
-                  <button className="text-xs border border-[#333] text-gray-400 px-3 py-1.5 rounded opacity-50 cursor-not-allowed">
-                    ✏️ Edit
+                  <button className="text-xs border border-white/[0.1] text-gray-400 px-3 py-1.5 rounded opacity-50 cursor-not-allowed">
+                    âœï¸ Edit
                   </button>
                 </div>
               </div>
@@ -319,7 +319,7 @@ export default function DemoPage() {
             href="/login"
             className="inline-block bg-[#00e87b] text-black font-bold px-8 py-3 rounded-lg hover:bg-[#00cc6a] transition text-lg"
           >
-            Start Free Trial →
+            Start Free Trial â†’
           </Link>
         </div>
       </div>
