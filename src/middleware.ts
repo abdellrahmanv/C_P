@@ -59,7 +59,7 @@ export async function middleware(request: NextRequest) {
 
   // Admin-only routes: check email against ADMIN_EMAIL
   if (isAdmin) {
-    const adminEmail = process.env.ADMIN_EMAIL;
+    const adminEmail = process.env.ADMIN_EMAIL?.trim();
     if (!adminEmail || user.email !== adminEmail) {
       return NextResponse.redirect(new URL("/dashboard", request.url));
     }
