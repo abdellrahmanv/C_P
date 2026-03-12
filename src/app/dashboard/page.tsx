@@ -804,28 +804,57 @@ Beta LLC,INV-002,8500,2026-03-01,2026-02-01,paid,billing@beta.com`}
             </div>
 
             {/* PayPal CTA */}
-            <div className="bg-[#111] border border-white/[0.06] rounded-2xl p-8 text-center">
-              <h3 className="text-xl font-bold mb-2">Ready to stop chasing?</h3>
-              <p className="text-[#888] mb-6">
-                Start your Growth plan — auto follow-ups, predictions, and ROI tracking.
-              </p>
-              <div className="inline-flex flex-col items-center gap-3">
-                <a
-                  href={`https://www.sandbox.paypal.com/webapps/billing/plans/subscribe?plan_id=${process.env.NEXT_PUBLIC_PAYPAL_GROWTH_PLAN_ID || 'P-8AF72973N39590509NGZNLZI'}`}
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  className="bg-[#0070ba] text-white px-8 py-4 rounded-xl text-lg font-bold hover:bg-[#005ea6] transition flex items-center gap-3"
-                >
-                  <svg viewBox="0 0 24 24" className="w-6 h-6 fill-current">
-                    <path d="M7.076 21.337H2.47a.641.641 0 0 1-.633-.74L4.944.901C5.026.382 5.474 0 5.998 0h7.46c2.57 0 4.578.543 5.69 1.81 1.01 1.15 1.304 2.42 1.012 4.287-.023.143-.047.288-.077.437-.983 5.05-4.349 6.797-8.647 6.797h-2.19c-.524 0-.968.382-1.05.9l-1.12 7.106zm14.146-14.42a3.35 3.35 0 0 0-.607-.541c1.613 1.862 1.09 5.333-.589 7.896-1.878 2.868-5.307 4.087-8.507 4.087H9.93l-1.286 8.124a.641.641 0 0 0 .633.74h3.564c.459 0 .85-.334.922-.788l.038-.2.73-4.627.047-.256a.929.929 0 0 1 .917-.788h.578c3.746 0 6.68-1.522 7.535-5.928.357-1.838.173-3.371-.786-4.45a3.72 3.72 0 0 0-.604-.469z" />
-                  </svg>
-                  Subscribe with PayPal — $149/mo
-                </a>
-                <span className="text-xs text-[#888]">14-day free trial · Cancel anytime</span>
-              </div>
-            </div>
+            <PayPalSubscribeCard />
           </div>
         )}
+      </div>
+    </div>
+  );
+}
+
+// PayPal subscribe card with proper API flow
+function PayPalSubscribeCard() {
+  const [loading, setLoading] = useState(false);
+  const [error, setError] = useState("");
+
+  async function handleSubscribe() {
+    setLoading(true);
+    setError("");
+    try {
+      const { data: { user } } = await supabase.auth.getUser();
+      const res = await fetch("/api/paypal/subscribe", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ plan: "growth", userId: user?.id }),
+      });
+      const data = await res.json();
+      if (!res.ok) throw new Error(data.error || "Failed to create subscription");
+      window.location.href = data.approvalUrl;
+    } catch (e) {
+      setError(e instanceof Error ? e.message : "Something went wrong");
+      setLoading(false);
+    }
+  }
+
+  return (
+    <div className="bg-[#111] border border-white/[0.06] rounded-2xl p-8 text-center">
+      <h3 className="text-xl font-bold mb-2">Ready to stop chasing?</h3>
+      <p className="text-[#888] mb-6">
+        Start your Growth plan — auto follow-ups, predictions, and ROI tracking.
+      </p>
+      <div className="inline-flex flex-col items-center gap-3">
+        <button
+          onClick={handleSubscribe}
+          disabled={loading}
+          className="bg-[#0070ba] text-white px-8 py-4 rounded-xl text-lg font-bold hover:bg-[#005ea6] transition flex items-center gap-3 disabled:opacity-50"
+        >
+          <svg viewBox="0 0 24 24" className="w-6 h-6 fill-current">
+            <path d="M7.076 21.337H2.47a.641.641 0 0 1-.633-.74L4.944.901C5.026.382 5.474 0 5.998 0h7.46c2.57 0 4.578.543 5.69 1.81 1.01 1.15 1.304 2.42 1.012 4.287-.023.143-.047.288-.077.437-.983 5.05-4.349 6.797-8.647 6.797h-2.19c-.524 0-.968.382-1.05.9l-1.12 7.106zm14.146-14.42a3.35 3.35 0 0 0-.607-.541c1.613 1.862 1.09 5.333-.589 7.896-1.878 2.868-5.307 4.087-8.507 4.087H9.93l-1.286 8.124a.641.641 0 0 0 .633.74h3.564c.459 0 .85-.334.922-.788l.038-.2.73-4.627.047-.256a.929.929 0 0 1 .917-.788h.578c3.746 0 6.68-1.522 7.535-5.928.357-1.838.173-3.371-.786-4.45a3.72 3.72 0 0 0-.604-.469z" />
+          </svg>
+          {loading ? "Redirecting to PayPal..." : "Subscribe with PayPal — $149/mo"}
+        </button>
+        {error && <p className="text-red-400 text-xs">{error}</p>}
+        <span className="text-xs text-[#888]">14-day free trial · Cancel anytime</span>
       </div>
     </div>
   );
