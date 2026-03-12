@@ -28,9 +28,11 @@ function LoginForm() {
     setError('');
     setMessage('');
 
+    const siteUrl = process.env.NEXT_PUBLIC_APP_URL || window.location.origin;
+
     if (mode === 'forgot') {
       const { error } = await supabase.auth.resetPasswordForEmail(email, {
-        redirectTo: `${window.location.origin}/dashboard`,
+        redirectTo: `${siteUrl}/auth/callback?next=/dashboard`,
       });
       if (error) setError(error.message);
       else setMessage('Check your email for a password reset link.');
@@ -42,7 +44,7 @@ function LoginForm() {
       const { error } = await supabase.auth.signUp({
         email,
         password,
-        options: { emailRedirectTo: `${window.location.origin}/onboarding` },
+        options: { emailRedirectTo: `${siteUrl}/auth/callback?next=/onboarding` },
       });
       if (error) setError(error.message);
       else setMessage('Check your email to confirm your account, then log in.');

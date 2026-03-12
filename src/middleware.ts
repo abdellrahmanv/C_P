@@ -10,6 +10,7 @@ export async function middleware(request: NextRequest) {
   // Skip API routes, static files, public pages
   if (
     pathname.startsWith("/api") ||
+    pathname.startsWith("/auth") ||
     pathname === "/" ||
     pathname === "/login" ||
     pathname === "/demo"
