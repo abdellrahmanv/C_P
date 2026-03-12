@@ -25,9 +25,38 @@ export async function GET(request: NextRequest) {
       },
     });
 
-    const { error } = await supabase.auth.exchangeCodeForSession(code);
+    const { error, data } = await supabase.auth.exchangeCodeForSession(code);
 
     if (!error) {
+      // Dynamically determine redirect based on onboarding status
+      let destination = next;
+      if (data.user) {
+        const { data: profile } = await supabase
+          .from('profiles')
+          .select('onboarded')
+          .eq('id', data.user.id)
+          .single();
+        if (profile?.onboarded) {
+          destination = '/dashboard';
+        } else {
+          destination = '/onboarding';
+        }
+      }
+      response = NextResponse.redirect(new URL(destination, request.url));
+      // Re-set cookies on the new response
+      const supabase2 = createServerClient(supabaseUrl, supabaseAnonKey, {
+        cookies: {
+          getAll() {
+            return request.cookies.getAll();
+          },
+          setAll(cookiesToSet) {
+            cookiesToSet.forEach(({ name, value, options }) => {
+              response.cookies.set(name, value, options);
+            });
+          },
+        },
+      });
+      await supabase2.auth.getUser();
       return response;
     }
   }

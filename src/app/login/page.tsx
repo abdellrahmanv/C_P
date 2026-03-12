@@ -53,12 +53,28 @@ function LoginForm() {
     }
 
     // Login
-    const { error } = await supabase.auth.signInWithPassword({ email, password });
+    const { data: loginData, error } = await supabase.auth.signInWithPassword({ email, password });
     if (error) {
       setError(error.message);
       setLoading(false);
     } else {
-      window.location.href = redirectTo;
+      // If there's an explicit redirect (e.g. from middleware), use it
+      if (redirectTo !== '/dashboard') {
+        window.location.href = redirectTo;
+        return;
+      }
+      // Otherwise check onboarding status
+      const userId = loginData.user?.id;
+      if (userId) {
+        const { data: profile } = await supabase.from('profiles').select('onboarded').eq('id', userId).single();
+        if (profile?.onboarded) {
+          window.location.href = '/dashboard';
+        } else {
+          window.location.href = '/onboarding';
+        }
+      } else {
+        window.location.href = '/dashboard';
+      }
     }
   }
 
