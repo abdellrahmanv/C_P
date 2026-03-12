@@ -1,15 +1,22 @@
 import { NextRequest, NextResponse } from "next/server";
 import { generateColdEmail } from "@/lib/llm";
+import { getServiceSupabase } from "@/lib/supabase";
 import type { Lead } from "@/lib/sales-types";
 
 export async function POST(request: NextRequest) {
+  // Auth: cron secret or valid request
+  const cronSecret = request.headers.get("x-cron-secret");
+  const expected = process.env.CRON_SECRET;
+  if (expected && cronSecret !== expected) {
+    return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
+  }
+
   try {
     const body = await request.json();
-    const { lead, subject, emailBody, from } = body as {
+    const { lead, subject, emailBody } = body as {
       lead: Lead;
       subject: string;
       emailBody: string;
-      from?: string;
     };
 
     if (!lead?.email || !subject || !emailBody) {
@@ -28,17 +35,19 @@ export async function POST(request: NextRequest) {
       );
     }
 
-    // Personalize with best available LLM (Qwen3-32B → Llama 3.3 70B fallback)
+    const senderEmail = process.env.SENDER_EMAIL || "onboarding@resend.dev";
+
+    // Personalize with LLM
     let personalizedBody = emailBody;
     try {
       personalizedBody = await generateColdEmail({
         companyName: lead.companyName,
         contactName: lead.contactName,
-        contactTitle: lead.contactTitle || 'Finance Manager',
-        industry: lead.industry || 'Business',
+        contactTitle: lead.contactTitle || "Finance Manager",
+        industry: lead.industry || "Business",
         subject,
         template: emailBody,
-        senderName: from || process.env.SENDER_NAME || 'CashPulse',
+        senderName: process.env.SENDER_NAME || "CashPulse",
       });
     } catch {
       // Use raw template if LLM unavailable
@@ -47,18 +56,11 @@ export async function POST(request: NextRequest) {
     const RESEND_API_KEY = process.env.RESEND_API_KEY;
 
     if (!RESEND_API_KEY) {
-      // Demo mode
-      console.log("=== COLD EMAIL (Demo Mode) ===");
-      console.log(`To: ${lead.email} (${lead.contactName} @ ${lead.companyName})`);
-      console.log(`Subject: ${subject}`);
-      console.log(`Body: ${personalizedBody.substring(0, 300)}...`);
-      console.log("==============================");
-
       return NextResponse.json({
         success: true,
         mode: "demo",
         personalized: true,
-        message: "Cold email logged (set RESEND_API_KEY to send)",
+        message: "Email logged (set RESEND_API_KEY to send)",
       });
     }
 
@@ -70,7 +72,7 @@ export async function POST(request: NextRequest) {
         "Content-Type": "application/json",
       },
       body: JSON.stringify({
-        from: from || `CashPulse <${process.env.SENDER_EMAIL || "onboarding@resend.dev"}>`,
+        from: `CashPulse <${senderEmail}>`,
         to: [lead.email],
         subject,
         text: personalizedBody,
@@ -86,6 +88,29 @@ export async function POST(request: NextRequest) {
     }
 
     const result = await response.json();
+
+    // Log to lead_activity
+    const supabase = getServiceSupabase();
+    if (lead.id) {
+      await supabase.from("lead_activity").insert({
+        lead_id: lead.id,
+        action: "email_sent",
+        details: JSON.stringify({
+          to: lead.email,
+          subject,
+          resend_id: result.id,
+          step: lead.sequenceStep || 0,
+        }),
+      });
+
+      // Update lead stage
+      await supabase.from("leads").update({
+        stage: "contacted",
+        sequence_step: (lead.sequenceStep || 0) + 1,
+        last_contacted_at: new Date().toISOString(),
+      }).eq("id", lead.id);
+    }
+
     return NextResponse.json({
       success: true,
       id: result.id,

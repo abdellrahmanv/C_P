@@ -107,7 +107,7 @@ create table public.leads (
   id uuid default gen_random_uuid() primary key,
   company_name text not null,
   contact_name text,
-  contact_email text,
+  contact_email text unique,
   contact_title text,
   industry text,
   employee_count integer,
@@ -125,6 +125,8 @@ create table public.leads (
 -- No RLS on leads — only accessed by server-side sales agent
 create index idx_leads_stage on public.leads(stage);
 create index idx_leads_score on public.leads(score desc);
+create index idx_leads_email on public.leads(contact_email);
+create index idx_leads_sequence on public.leads(stage, sequence_step, last_contacted_at);
 
 
 -- ============================================================

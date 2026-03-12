@@ -33,6 +33,7 @@ import {
   calculateSalesMetrics,
   scoreLead,
 } from "@/lib/sales-engine";
+import { supabase } from "@/lib/supabase";
 
 type ViewType = "pipeline" | "leads" | "sequences" | "settings";
 
@@ -54,11 +55,47 @@ export default function SalesAgent() {
   const [senderName, setSenderName] = useState("CashPulse");
   const [dailyLimit, setDailyLimit] = useState(100);
 
-  // Load demo data on mount
+  // Load leads from Supabase on mount, fallback to mock data
   useEffect(() => {
-    const demoLeads = generateMockLeads(50);
-    setLeads(demoLeads);
-    setMetrics(calculateSalesMetrics(demoLeads));
+    async function loadLeads() {
+      try {
+        const { data, error } = await supabase
+          .from("leads")
+          .select("*")
+          .order("score", { ascending: false })
+          .limit(200);
+
+        if (!error && data && data.length > 0) {
+          const dbLeads: Lead[] = data.map((row: Record<string, unknown>) => ({
+            id: row.id as string,
+            companyName: (row.company_name as string) || "Unknown",
+            contactName: (row.contact_name as string) || "Unknown",
+            contactTitle: (row.contact_title as string) || "",
+            email: (row.contact_email as string) || "",
+            industry: (row.industry as string) || "",
+            employeeCount: (row.employee_count as number) || 0,
+            website: (row.website as string) || "",
+            source: ((row.source as string) || "apollo") as Lead["source"],
+            status: (row.stage as Lead["status"]) || "new",
+            score: (row.score as number) || 0,
+            sequenceStep: (row.sequence_step as number) || 0,
+            notes: (row.notes as string) || "",
+            createdAt: (row.created_at as string) || new Date().toISOString(),
+            lastContactedAt: (row.last_contacted_at as string) || undefined,
+            tags: [],
+          }));
+          setLeads(dbLeads);
+          setMetrics(calculateSalesMetrics(dbLeads));
+          return;
+        }
+      } catch {
+        // fallback to mock
+      }
+      const demoLeads = generateMockLeads(50);
+      setLeads(demoLeads);
+      setMetrics(calculateSalesMetrics(demoLeads));
+    }
+    loadLeads();
   }, []);
 
   const addLog = useCallback((message: string) => {
@@ -80,20 +117,44 @@ export default function SalesAgent() {
       const data = await response.json();
 
       if (data.success) {
-        const newLeads = data.leads.filter(
-          (nl: Lead) => !leads.some((l) => l.email === nl.email)
-        );
-        const updatedLeads = [...leads, ...newLeads];
-        setLeads(updatedLeads);
-        setMetrics(calculateSalesMetrics(updatedLeads));
-        addLog(`✅ Found ${newLeads.length} new leads (${data.source})`);
+        addLog(`✅ Found ${data.count} leads, ${data.saved} new saved (${data.source})`);
+
+        // Reload from Supabase to get persisted data
+        const { data: dbLeads } = await supabase
+          .from("leads")
+          .select("*")
+          .order("score", { ascending: false })
+          .limit(200);
+
+        if (dbLeads && dbLeads.length > 0) {
+          const mapped: Lead[] = dbLeads.map((row: Record<string, unknown>) => ({
+            id: row.id as string,
+            companyName: (row.company_name as string) || "Unknown",
+            contactName: (row.contact_name as string) || "Unknown",
+            contactTitle: (row.contact_title as string) || "",
+            email: (row.contact_email as string) || "",
+            industry: (row.industry as string) || "",
+            employeeCount: (row.employee_count as number) || 0,
+            website: (row.website as string) || "",
+            source: ((row.source as string) || "apollo") as Lead["source"],
+            status: (row.stage as Lead["status"]) || "new",
+            score: (row.score as number) || 0,
+            sequenceStep: (row.sequence_step as number) || 0,
+            notes: (row.notes as string) || "",
+            createdAt: (row.created_at as string) || new Date().toISOString(),
+            lastContactedAt: (row.last_contacted_at as string) || undefined,
+            tags: [],
+          }));
+          setLeads(mapped);
+          setMetrics(calculateSalesMetrics(mapped));
+        }
       }
     } catch {
       addLog("❌ Scout failed — check connection");
     }
 
     setIsLoading(false);
-  }, [apolloKey, leads, addLog]);
+  }, [apolloKey, addLog]);
 
   // Send cold email to a specific lead
   const handleSendEmail = useCallback(
