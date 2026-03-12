@@ -46,7 +46,7 @@ export async function POST(request: NextRequest) {
         "Content-Type": "application/json",
       },
       body: JSON.stringify({
-        from: from || "CashPulse <noreply@cashpulse.io>",
+        from: from || `CashPulse <${process.env.SENDER_EMAIL || "onboarding@resend.dev"}>`,
         to: [to],
         subject,
         text: emailBody,

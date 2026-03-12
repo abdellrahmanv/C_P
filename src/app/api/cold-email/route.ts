@@ -70,7 +70,7 @@ export async function POST(request: NextRequest) {
         "Content-Type": "application/json",
       },
       body: JSON.stringify({
-        from: from || "CashPulse <hello@cashpulse.io>",
+        from: from || `CashPulse <${process.env.SENDER_EMAIL || "onboarding@resend.dev"}>`,
         to: [lead.email],
         subject,
         text: personalizedBody,
