@@ -698,9 +698,11 @@ function ActionButton({
   const run = async () => {
     setState("loading");
     try {
-      const headers: Record<string, string> = { "Content-Type": "application/json" };
-      if (headerKey) headers[headerKey] = "cashpulsenexuskey2026";
-      const res = await fetch(href, { method, headers });
+      const res = await fetch("/api/admin/action", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ target: href, method, headerKey }),
+      });
       setState(res.ok ? "done" : "error");
     } catch {
       setState("error");

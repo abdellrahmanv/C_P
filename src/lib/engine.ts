@@ -63,8 +63,13 @@ export function parseInvoices(
       else if (invoiceAge > 60) riskScore += 10;
       else if (invoiceAge > 30) riskScore += 5;
 
-      // Random variation factor (0-15 points) — simulates other signals
-      riskScore += Math.floor(Math.random() * 15);
+      // Deterministic variation factor based on customer name hash
+      let nameHash = 0;
+      const nameStr = customerName || '';
+      for (let i = 0; i < nameStr.length; i++) {
+        nameHash = ((nameHash << 5) - nameHash + nameStr.charCodeAt(i)) | 0;
+      }
+      riskScore += Math.abs(nameHash) % 15;
 
       riskScore = Math.min(100, riskScore);
 
@@ -129,7 +134,7 @@ export function calculateStats(invoices: Invoice[]): DashboardStats {
     atRiskCount: atRiskInvoices.length,
     avgDaysToPayment,
     collectionRate: Math.round(collectionRate),
-    recoveredThisMonth: Math.round(totalPaid * 0.15), // Estimate
+    recoveredThisMonth: totalPaid,
   };
 }
 

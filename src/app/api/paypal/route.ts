@@ -1,41 +1,124 @@
 import { NextRequest, NextResponse } from "next/server";
+import { createClient } from "@supabase/supabase-js";
+
+const supabaseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL || "";
+const serviceKey = process.env.SUPABASE_SERVICE_ROLE_KEY || "";
+
+function getSupabase() {
+  return createClient(supabaseUrl, serviceKey);
+}
+
+// Map PayPal plan IDs to our plan names
+function planFromPayPalId(paypalPlanId: string): string {
+  const starterPlan = process.env.PAYPAL_STARTER_PLAN_ID;
+  const growthPlan = process.env.PAYPAL_GROWTH_PLAN_ID;
+  const scalePlan = process.env.PAYPAL_SCALE_PLAN_ID;
+  if (paypalPlanId === starterPlan) return "starter";
+  if (paypalPlanId === growthPlan) return "growth";
+  if (paypalPlanId === scalePlan) return "scale";
+  return "free";
+}
 
 // PayPal Subscription webhook handler
 export async function POST(request: NextRequest) {
   try {
     const body = await request.json();
     const eventType = body.event_type;
+    const resource = body.resource || {};
+    const subscriptionId = resource.id || resource.billing_agreement_id;
+    const customId = resource.custom_id; // We pass user_id as custom_id during checkout
 
-    console.log(`PayPal Webhook: ${eventType}`);
+    if (!supabaseUrl || !serviceKey) {
+      return NextResponse.json({ received: true, note: "no db configured" });
+    }
+
+    const supabase = getSupabase();
 
     switch (eventType) {
-      case "BILLING.SUBSCRIPTION.CREATED":
-        console.log("New subscription created:", body.resource?.id);
-        // In production: create user account, start trial
+      case "BILLING.SUBSCRIPTION.CREATED": {
+        // Subscription created — save to subscriptions table
+        if (customId && subscriptionId) {
+          await supabase.from("subscriptions").upsert({
+            user_id: customId,
+            paypal_subscription_id: subscriptionId,
+            plan: planFromPayPalId(resource.plan_id),
+            status: "pending",
+            current_period_start: resource.start_time,
+          }, { onConflict: "user_id" });
+        }
         break;
+      }
 
-      case "BILLING.SUBSCRIPTION.ACTIVATED":
-        console.log("Subscription activated:", body.resource?.id);
-        // In production: activate full access
+      case "BILLING.SUBSCRIPTION.ACTIVATED": {
+        // Subscription activated — grant full access
+        if (subscriptionId) {
+          const { data: sub } = await supabase
+            .from("subscriptions")
+            .select("user_id")
+            .eq("paypal_subscription_id", subscriptionId)
+            .single();
+          if (sub) {
+            await supabase.from("subscriptions")
+              .update({ status: "active" })
+              .eq("paypal_subscription_id", subscriptionId);
+            await supabase.from("profiles")
+              .update({ plan: planFromPayPalId(resource.plan_id) || "growth" })
+              .eq("id", sub.user_id);
+          }
+        }
         break;
+      }
 
-      case "PAYMENT.SALE.COMPLETED":
-        console.log("Payment received:", body.resource?.amount?.total);
-        // In production: record payment, extend access
+      case "PAYMENT.SALE.COMPLETED": {
+        // Payment received — record payment
+        const amount = parseFloat(resource.amount?.total || "0");
+        if (subscriptionId && amount > 0) {
+          const { data: sub } = await supabase
+            .from("subscriptions")
+            .select("id, user_id")
+            .eq("paypal_subscription_id", subscriptionId)
+            .single();
+          if (sub) {
+            await supabase.from("payments").insert({
+              subscription_id: sub.id,
+              user_id: sub.user_id,
+              paypal_payment_id: resource.id,
+              amount,
+              status: "completed",
+            });
+          }
+        }
         break;
+      }
 
-      case "BILLING.SUBSCRIPTION.CANCELLED":
-        console.log("Subscription cancelled:", body.resource?.id);
-        // In production: mark for end-of-period deactivation
+      case "BILLING.SUBSCRIPTION.CANCELLED": {
+        if (subscriptionId) {
+          await supabase.from("subscriptions")
+            .update({ status: "cancelled" })
+            .eq("paypal_subscription_id", subscriptionId);
+        }
         break;
+      }
 
-      case "BILLING.SUBSCRIPTION.SUSPENDED":
-        console.log("Subscription suspended:", body.resource?.id);
-        // In production: restrict to read-only
+      case "BILLING.SUBSCRIPTION.SUSPENDED": {
+        if (subscriptionId) {
+          await supabase.from("subscriptions")
+            .update({ status: "suspended" })
+            .eq("paypal_subscription_id", subscriptionId);
+          // Downgrade to free
+          const { data: sub } = await supabase
+            .from("subscriptions")
+            .select("user_id")
+            .eq("paypal_subscription_id", subscriptionId)
+            .single();
+          if (sub) {
+            await supabase.from("profiles")
+              .update({ plan: "free" })
+              .eq("id", sub.user_id);
+          }
+        }
         break;
-
-      default:
-        console.log("Unhandled PayPal event:", eventType);
+      }
     }
 
     return NextResponse.json({ received: true });

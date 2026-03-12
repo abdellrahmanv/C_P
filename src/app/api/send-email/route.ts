@@ -1,9 +1,23 @@
 import { NextRequest, NextResponse } from "next/server";
+import { createServerClient } from "@supabase/ssr";
 
 export async function POST(request: NextRequest) {
   try {
+    // Auth check — only logged-in users can send emails
+    const supabaseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL;
+    const supabaseAnonKey = process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY;
+    if (supabaseUrl && supabaseAnonKey) {
+      const supabase = createServerClient(supabaseUrl, supabaseAnonKey, {
+        cookies: { getAll() { return request.cookies.getAll(); }, setAll() {} },
+      });
+      const { data: { user } } = await supabase.auth.getUser();
+      if (!user) {
+        return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
+      }
+    }
+
     const body = await request.json();
-    const { to, subject, body: emailBody, from } = body;
+    const { to, subject, body: emailBody } = body;
 
     if (!to || !subject || !emailBody) {
       return NextResponse.json(
@@ -46,7 +60,7 @@ export async function POST(request: NextRequest) {
         "Content-Type": "application/json",
       },
       body: JSON.stringify({
-        from: from || `CashPulse <${process.env.SENDER_EMAIL || "onboarding@resend.dev"}>`,
+        from: `CashPulse <${process.env.SENDER_EMAIL || "onboarding@resend.dev"}>`,
         to: [to],
         subject,
         text: emailBody,

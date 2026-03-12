@@ -1,7 +1,9 @@
 'use client';
 
-import { useState } from 'react';
+import { useState, useRef } from 'react';
 import { supabase } from '@/lib/supabase';
+import Papa from 'papaparse';
+import { parseInvoices } from '@/lib/engine';
 
 const STEPS = [
   { title: 'Your Company', desc: 'Tell us about your business' },
@@ -15,6 +17,38 @@ export default function OnboardingPage() {
   const [industry, setIndustry] = useState('');
   const [invoiceCount, setInvoiceCount] = useState('');
   const [loading, setLoading] = useState(false);
+  const [uploadedCount, setUploadedCount] = useState(0);
+  const fileRef = useRef<HTMLInputElement>(null);
+
+  async function handleFileUpload(file: File) {
+    setLoading(true);
+    Papa.parse(file, {
+      header: true,
+      skipEmptyLines: true,
+      complete: async (results) => {
+        const rows = results.data as Record<string, string>[];
+        const parsed = parseInvoices(rows);
+        const { data: { user } } = await supabase.auth.getUser();
+        if (user && parsed.length > 0) {
+          const inserts = parsed.map((inv) => ({
+            user_id: user.id,
+            invoice_number: inv.invoiceNumber,
+            customer_name: inv.customerName,
+            customer_email: inv.customerEmail,
+            amount: inv.amount,
+            due_date: inv.dueDate,
+            status: inv.status,
+            risk_score: inv.riskScore,
+            risk_level: inv.riskLevel,
+            days_past_due: inv.daysPastDue,
+          }));
+          await supabase.from("invoices").insert(inserts);
+          setUploadedCount(parsed.length);
+        }
+        setLoading(false);
+      },
+    });
+  }
 
   async function handleCompanySubmit() {
     setLoading(true);
@@ -22,6 +56,8 @@ export default function OnboardingPage() {
     if (user) {
       await supabase.from('profiles').update({
         company_name: companyName,
+        industry: industry,
+        invoice_volume: invoiceCount,
         updated_at: new Date().toISOString(),
       }).eq('id', user.id);
     }
@@ -127,13 +163,40 @@ export default function OnboardingPage() {
           {/* Step 2: Upload */}
           {step === 1 && (
             <div className="space-y-4">
-              <div className="border-2 border-dashed border-[#333] rounded-xl p-8 text-center hover:border-[#00e87b] transition cursor-pointer">
+              <div
+                className="border-2 border-dashed border-[#333] rounded-xl p-8 text-center hover:border-[#00e87b] transition cursor-pointer"
+                onClick={() => fileRef.current?.click()}
+                onDragOver={(e) => e.preventDefault()}
+                onDrop={(e) => {
+                  e.preventDefault();
+                  const file = e.dataTransfer.files[0];
+                  if (file?.name.endsWith('.csv')) handleFileUpload(file);
+                }}
+              >
                 <div className="text-4xl mb-3">📄</div>
-                <p className="text-white font-medium mb-1">Upload your CSV</p>
-                <p className="text-gray-500 text-sm">
-                  Drag & drop or click to browse. Columns: customer, amount, due_date, email
-                </p>
-                <input type="file" accept=".csv" className="hidden" />
+                {uploadedCount > 0 ? (
+                  <>
+                    <p className="text-[#00e87b] font-medium mb-1">✓ {uploadedCount} invoices uploaded</p>
+                    <p className="text-gray-500 text-sm">Click or drop to replace</p>
+                  </>
+                ) : (
+                  <>
+                    <p className="text-white font-medium mb-1">{loading ? 'Processing...' : 'Upload your CSV'}</p>
+                    <p className="text-gray-500 text-sm">
+                      Drag & drop or click to browse. Columns: customer, amount, due_date, email
+                    </p>
+                  </>
+                )}
+                <input
+                  ref={fileRef}
+                  type="file"
+                  accept=".csv"
+                  className="hidden"
+                  onChange={(e) => {
+                    const file = e.target.files?.[0];
+                    if (file) handleFileUpload(file);
+                  }}
+                />
               </div>
               <div className="flex gap-3">
                 <button
@@ -144,7 +207,8 @@ export default function OnboardingPage() {
                 </button>
                 <button
                   onClick={() => setStep(2)}
-                  className="flex-1 bg-[#00e87b] text-black font-semibold py-3 rounded-lg hover:bg-[#00cc6a] transition"
+                  disabled={loading}
+                  className="flex-1 bg-[#00e87b] text-black font-semibold py-3 rounded-lg hover:bg-[#00cc6a] transition disabled:opacity-50"
                 >
                   Continue
                 </button>

@@ -198,8 +198,9 @@ async function runAction(action: string, request: NextRequest) {
         .select("stage", { count: "exact" });
 
       const { data: emailsSent } = await supabase
-        .from("email_log")
+        .from("lead_activity")
         .select("id", { count: "exact" })
+        .eq("action", "email_sent")
         .gte("created_at", new Date(Date.now() - 24 * 60 * 60 * 1000).toISOString());
 
       const { data: recentLeads } = await supabase

@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, useCallback } from "react";
+import { useState, useCallback, useEffect } from "react";
 import Papa from "papaparse";
 import {
   DollarSign,
@@ -18,6 +18,7 @@ import {
   ChevronUp,
 } from "lucide-react";
 import Link from "next/link";
+import { supabase } from "@/lib/supabase";
 import {
   parseInvoices,
   calculateStats,
@@ -53,9 +54,9 @@ export default function Dashboard() {
   const [sortDir, setSortDir] = useState<"asc" | "desc">("desc");
 
   const processData = useCallback(
-    (rows: Record<string, string>[]) => {
+    (rows: Record<string, string>[], persist = true) => {
       setIsLoading(true);
-      setTimeout(() => {
+      setTimeout(async () => {
         const parsed = parseInvoices(rows);
         setInvoices(parsed);
         setStats(calculateStats(parsed));
@@ -64,10 +65,58 @@ export default function Dashboard() {
         setFollowUps(generateFollowUpActions(parsed, companyName || "Your Company"));
         setIsLoading(false);
         setActiveTab("overview");
-      }, 800);
+
+        // Persist to Supabase
+        if (persist) {
+          const { data: { user } } = await supabase.auth.getUser();
+          if (user) {
+            // Clear old invoices for this user, then insert new
+            await supabase.from("invoices").delete().eq("user_id", user.id);
+            const inserts = parsed.map((inv) => ({
+              user_id: user.id,
+              invoice_number: inv.invoiceNumber,
+              customer_name: inv.customerName,
+              customer_email: inv.customerEmail,
+              amount: inv.amount,
+              due_date: inv.dueDate,
+              status: inv.status,
+              risk_score: inv.riskScore,
+              risk_level: inv.riskLevel,
+              days_past_due: inv.daysPastDue,
+            }));
+            await supabase.from("invoices").insert(inserts);
+          }
+        }
+      }, 300);
     },
     [companyName]
   );
+
+  // Load saved invoices on mount
+  useEffect(() => {
+    async function loadSaved() {
+      const { data: { user } } = await supabase.auth.getUser();
+      if (!user) return;
+      const { data } = await supabase
+        .from("invoices")
+        .select("*")
+        .eq("user_id", user.id)
+        .order("created_at", { ascending: false });
+      if (data && data.length > 0) {
+        // Convert DB rows back to the format parseInvoices expects
+        const rows = data.map((d) => ({
+          customer_name: d.customer_name || "",
+          invoice_number: d.invoice_number || "",
+          amount: String(d.amount || 0),
+          due_date: d.due_date || "",
+          status: d.status || "",
+          email: d.customer_email || "",
+        }));
+        processData(rows, false);
+      }
+    }
+    loadSaved();
+  }, []); // eslint-disable-line react-hooks/exhaustive-deps
 
   const handleFileUpload = useCallback(
     (file: File) => {
@@ -648,13 +697,34 @@ Beta LLC,INV-002,8500,2026-03-01,2026-02-01,paid,billing@beta.com`}
                       </pre>
                     </div>
                     <div className="flex gap-3">
-                      <button className="bg-[#00e87b] text-black px-4 py-2 rounded-lg text-sm font-semibold hover:bg-[#00c966] transition">
+                      <button
+                        onClick={async () => {
+                          const to = action.customerEmail || `${action.customerName.toLowerCase().replace(/\s+/g, ".")}@company.com`;
+                          const res = await fetch("/api/send-email", {
+                            method: "POST",
+                            headers: { "Content-Type": "application/json" },
+                            body: JSON.stringify({ to, subject: action.template.subject, body: action.template.body }),
+                          });
+                          if (res.ok) {
+                            setFollowUps((prev) => prev.map((f, fi) => fi === followUps.indexOf(action) ? { ...f, sent: true } : f));
+                          }
+                        }}
+                        className="bg-[#00e87b] text-black px-4 py-2 rounded-lg text-sm font-semibold hover:bg-[#00c966] transition"
+                      >
                         Approve & Send
                       </button>
-                      <button className="bg-[#222] text-white px-4 py-2 rounded-lg text-sm hover:bg-[#333] transition">
-                        Edit Template
+                      <button
+                        onClick={() => setExpandedEmail(null)}
+                        className="bg-[#222] text-white px-4 py-2 rounded-lg text-sm hover:bg-[#333] transition"
+                      >
+                        Close
                       </button>
-                      <button className="bg-[#222] text-[#888] px-4 py-2 rounded-lg text-sm hover:bg-[#333] transition">
+                      <button
+                        onClick={() => {
+                          setFollowUps((prev) => prev.map((f, fi) => fi === followUps.indexOf(action) ? { ...f, sent: true } : f));
+                        }}
+                        className="bg-[#222] text-[#888] px-4 py-2 rounded-lg text-sm hover:bg-[#333] transition"
+                      >
                         Skip
                       </button>
                     </div>

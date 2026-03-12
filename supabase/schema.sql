@@ -203,12 +203,11 @@ select
   user_id,
   count(*) as total_invoices,
   count(*) filter (where status = 'overdue') as overdue_count,
-  coalesce(sum(amount), 0) as total_outstanding,
+  coalesce(sum(amount) filter (where status != 'paid'), 0) as total_outstanding,
   coalesce(sum(amount) filter (where status = 'overdue'), 0) as overdue_amount,
   coalesce(sum(amount) filter (where status = 'paid'), 0) as collected_amount,
   coalesce(avg(risk_score), 0) as avg_risk_score
 from public.invoices
-where status != 'paid'
 group by user_id;
 
 

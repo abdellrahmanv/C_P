@@ -148,15 +148,24 @@ export async function runSalesPipelineAgent(supabaseUrl: string, supabaseKey: st
   if (supabaseUrl && supabaseKey) {
     try {
       const sevenDaysAgo = new Date(Date.now() - 7 * 86400_000).toISOString();
-      const res = await fetch(
-        `${supabaseUrl}/rest/v1/leads?created_at=gte.${sevenDaysAgo}&select=id,status,email_sent,replied`,
-        { headers: { apikey: supabaseKey, Authorization: `Bearer ${supabaseKey}` }, signal: AbortSignal.timeout(8000) }
-      );
-      if (res.ok) {
-        const leads: Array<{ status: string; email_sent: boolean; replied: boolean }> = await res.json();
+      const [leadsRes, activityRes] = await Promise.all([
+        fetch(
+          `${supabaseUrl}/rest/v1/leads?created_at=gte.${sevenDaysAgo}&select=id,stage`,
+          { headers: { apikey: supabaseKey, Authorization: `Bearer ${supabaseKey}` }, signal: AbortSignal.timeout(8000) }
+        ),
+        fetch(
+          `${supabaseUrl}/rest/v1/lead_activity?created_at=gte.${sevenDaysAgo}&select=action`,
+          { headers: { apikey: supabaseKey, Authorization: `Bearer ${supabaseKey}` }, signal: AbortSignal.timeout(8000) }
+        ),
+      ]);
+      if (leadsRes.ok) {
+        const leads: Array<{ id: string; stage: string }> = await leadsRes.json();
         weeklyLeads = leads.length;
-        emailsSent = leads.filter((l) => l.email_sent).length;
-        emailReplies = leads.filter((l) => l.replied).length;
+        emailReplies = leads.filter((l) => l.stage === 'replied').length;
+      }
+      if (activityRes.ok) {
+        const activities: Array<{ action: string }> = await activityRes.json();
+        emailsSent = activities.filter((a) => a.action === 'email_sent').length;
       }
     } catch { /* Supabase not connected yet */ }
   }
@@ -205,7 +214,7 @@ export async function runRevenueAgent(supabaseUrl: string, supabaseKey: string):
   if (supabaseUrl && supabaseKey) {
     try {
       const [paymentsRes, profilesRes] = await Promise.all([
-        fetch(`${supabaseUrl}/rest/v1/payments?status=eq.active&select=amount,user_id`, {
+        fetch(`${supabaseUrl}/rest/v1/payments?status=eq.completed&select=amount,user_id`, {
           headers: { apikey: supabaseKey, Authorization: `Bearer ${supabaseKey}` },
           signal: AbortSignal.timeout(8000),
         }),
