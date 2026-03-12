@@ -31,7 +31,6 @@ import {
   generateMockLeads,
   getColdEmailSequence,
   calculateSalesMetrics,
-  scoreLead,
 } from "@/lib/sales-engine";
 import { supabase } from "@/lib/supabase";
 

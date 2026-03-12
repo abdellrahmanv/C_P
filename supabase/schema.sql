@@ -9,6 +9,8 @@ create table public.profiles (
   id uuid references auth.users on delete cascade primary key,
   email text not null,
   company_name text,
+  industry text,
+  invoice_volume text,
   plan text default 'free' check (plan in ('free', 'starter', 'growth', 'scale')),
   paypal_subscription_id text,
   onboarded boolean default false,
