@@ -2,6 +2,7 @@
 
 import { useState, useCallback, useEffect } from "react";
 import Papa from "papaparse";
+import Logo from "@/components/Logo";
 import {
   DollarSign,
   Upload,
@@ -208,12 +209,7 @@ export default function Dashboard() {
         <div className="absolute top-[-20%] left-1/2 -translate-x-1/2 w-[600px] h-[600px] bg-[#00e87b]/[0.04] rounded-full blur-[120px] pointer-events-none" />
         <nav className="border-b border-white/[0.06] px-6 py-4 relative">
           <div className="max-w-4xl mx-auto flex justify-between items-center">
-            <Link href="/" className="flex items-center gap-2">
-              <div className="w-8 h-8 rounded-lg bg-[#00e87b] flex items-center justify-center">
-                <DollarSign className="w-5 h-5 text-black" />
-              </div>
-              <span className="text-xl font-bold">CashPulse</span>
-            </Link>
+            <Logo textClass="text-xl font-bold" />
           </div>
         </nav>
 
@@ -321,12 +317,7 @@ Beta LLC,INV-002,8500,2026-03-01,2026-02-01,paid,billing@beta.com`}
       <nav className="border-b border-white/[0.06] px-6 py-4">
         <div className="max-w-7xl mx-auto flex justify-between items-center">
           <div className="flex items-center gap-4">
-            <Link href="/" className="flex items-center gap-2">
-              <div className="w-8 h-8 rounded-lg bg-[#00e87b] flex items-center justify-center">
-                <DollarSign className="w-5 h-5 text-black" />
-              </div>
-              <span className="text-xl font-bold">CashPulse</span>
-            </Link>
+            <Logo textClass="text-xl font-bold" />
             <span className="text-white/[0.15]">|</span>
             <span className="text-sm text-[#888]">{invoices.length} invoices loaded</span>
           </div>

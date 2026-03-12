@@ -2,6 +2,7 @@
 
 import { useState, useEffect } from 'react';
 import Link from 'next/link';
+import Logo from '@/components/Logo';
 import Papa from 'papaparse';
 import {
   parseInvoices,
@@ -75,13 +76,10 @@ export default function DemoPage() {
       </div>
 
       <header className="border-b border-white/[0.06] px-6 py-4 flex items-center justify-between">
-        <Link href="/" className="flex items-center gap-2">
-          <div className="w-8 h-8 bg-[#00e87b] rounded-lg flex items-center justify-center font-bold text-black text-sm">
-            C
-          </div>
-          <span className="font-bold text-lg">CashPulse</span>
+        <div className="flex items-center gap-2">
+          <Logo textClass="font-bold text-lg" />
           <span className="text-xs bg-white/[0.06] text-gray-400 px-2 py-0.5 rounded-full ml-2">DEMO</span>
-        </Link>
+        </div>
         <Link
           href="/login"
           className="bg-[#00e87b] text-black font-semibold px-4 py-2 rounded-lg hover:bg-[#00cc6a] transition text-sm"

@@ -4,6 +4,7 @@ import { useState, useRef } from 'react';
 import { supabase } from '@/lib/supabase';
 import Papa from 'papaparse';
 import { parseInvoices } from '@/lib/engine';
+import Logo from '@/components/Logo';
 
 const STEPS = [
   { title: 'Your Company', desc: 'Tell us about your business' },
@@ -81,11 +82,8 @@ export default function OnboardingPage() {
     <div className="min-h-screen bg-[#0a0a0a] flex items-center justify-center p-4">
       <div className="w-full max-w-[520px]">
         {/* Logo */}
-        <div className="flex items-center justify-center gap-2.5 mb-6">
-          <div className="w-9 h-9 bg-[#00e87b] rounded-lg flex items-center justify-center">
-            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="black" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round"><line x1="12" y1="1" x2="12" y2="23"/><path d="M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6"/></svg>
-          </div>
-          <span className="text-[22px] font-semibold text-white tracking-tight">CashPulse</span>
+        <div className="flex justify-center mb-6">
+          <Logo size={36} textClass="text-[22px] font-semibold text-white tracking-tight" linked={false} />
         </div>
 
         {/* Progress bar */}

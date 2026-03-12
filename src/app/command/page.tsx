@@ -1,6 +1,7 @@
 "use client";
 
 import { useState, useEffect, useCallback } from "react";
+import Logo from "@/components/Logo";
 import {
   Activity,
   Users,
@@ -14,7 +15,6 @@ import {
   ArrowDownRight,
   RefreshCw,
   Circle,
-  DollarSign,
 } from "lucide-react";
 import Link from "next/link";
 import { supabase } from "@/lib/supabase";
@@ -372,12 +372,7 @@ export default function CommandCenter() {
       <nav className="sticky top-0 z-50 bg-[#0a0a0a]/80 backdrop-blur-xl border-b border-[#1a1a1a]">
         <div className="max-w-[1400px] mx-auto px-6 py-3 flex items-center justify-between">
           <div className="flex items-center gap-4">
-            <Link href="/" className="flex items-center gap-2.5">
-              <div className="w-8 h-8 rounded-lg bg-[#00e87b] flex items-center justify-center">
-                <DollarSign className="w-5 h-5 text-black" />
-              </div>
-              <span className="font-bold text-lg">CashPulse</span>
-            </Link>
+            <Logo textClass="font-bold text-lg" />
             <span className="text-[#333] text-lg">/</span>
             <span className="text-[#666] text-sm font-medium">Command Center</span>
           </div>

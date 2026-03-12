@@ -1,16 +1,10 @@
-import Link from "next/link";
-import { DollarSign } from "lucide-react";
+import Logo from "@/components/Logo";
 
 export default function TermsPage() {
   return (
     <div className="min-h-screen bg-[#0a0a0a] text-white">
       <nav className="border-b border-white/[0.06] px-6 h-16 flex items-center">
-        <Link href="/" className="flex items-center gap-2">
-          <div className="w-8 h-8 rounded-lg bg-[#00e87b] flex items-center justify-center">
-            <DollarSign className="w-5 h-5 text-black" />
-          </div>
-          <span className="text-lg font-bold tracking-tight">CashPulse</span>
-        </Link>
+        <Logo textClass="text-lg font-bold tracking-tight" />
       </nav>
       <div className="max-w-3xl mx-auto px-6 py-16">
         <h1 className="text-3xl font-bold mb-2">Terms of Service</h1>

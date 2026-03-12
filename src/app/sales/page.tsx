@@ -1,6 +1,7 @@
 "use client";
 
 import { useState, useCallback, useEffect } from "react";
+import Logo from "@/components/Logo";
 import {
   DollarSign,
   Users,
@@ -267,12 +268,7 @@ export default function SalesAgent() {
       <nav className="border-b border-white/[0.06] px-6 py-4">
         <div className="max-w-7xl mx-auto flex justify-between items-center">
           <div className="flex items-center gap-4">
-            <Link href="/" className="flex items-center gap-2">
-              <div className="w-8 h-8 rounded-lg bg-[#00e87b] flex items-center justify-center">
-                <DollarSign className="w-5 h-5 text-black" />
-              </div>
-              <span className="text-xl font-bold">CashPulse</span>
-            </Link>
+            <Logo textClass="text-xl font-bold" />
             <span className="text-[#333]">|</span>
             <span className="text-sm text-[#888]">Sales Agent</span>
             <div className={`flex items-center gap-1.5 px-2.5 py-1 rounded-full text-xs ${isRunning ? "bg-green-500/10 text-green-400" : "bg-white/[0.06] text-[#888]"}`}>

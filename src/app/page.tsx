@@ -2,7 +2,6 @@
 
 import { useState } from "react";
 import {
-  DollarSign,
   ArrowRight,
   Check,
   Upload,
@@ -17,6 +16,7 @@ import {
   ChevronRight,
 } from "lucide-react";
 import Link from "next/link";
+import Logo, { LogoMark } from "@/components/Logo";
 
 export default function Home() {
   const [waitlistEmail, setWaitlistEmail] = useState("");
@@ -53,12 +53,7 @@ export default function Home() {
       {/* ═══════════════ NAV ═══════════════ */}
       <nav className="fixed top-0 w-full z-50 bg-[#0a0a0a]/80 backdrop-blur-xl border-b border-white/[0.06]">
         <div className="max-w-6xl mx-auto px-6 h-16 flex justify-between items-center">
-          <Link href="/" className="flex items-center gap-2.5">
-            <div className="w-8 h-8 rounded-lg bg-[#00e87b] flex items-center justify-center">
-              <DollarSign className="w-5 h-5 text-black" />
-            </div>
-            <span className="text-lg font-bold tracking-tight">CashPulse</span>
-          </Link>
+          <Logo textClass="text-lg font-bold tracking-tight" />
           <div className="hidden md:flex items-center gap-1">
             <a href="#how" className="px-3 py-2 text-sm text-[#999] hover:text-white transition rounded-lg hover:bg-white/[0.04]">How it Works</a>
             <a href="#features" className="px-3 py-2 text-sm text-[#999] hover:text-white transition rounded-lg hover:bg-white/[0.04]">Features</a>
@@ -396,11 +391,8 @@ export default function Home() {
           <div className="grid grid-cols-2 md:grid-cols-4 gap-8 mb-12">
             {/* Logo column */}
             <div className="col-span-2 md:col-span-1">
-              <div className="flex items-center gap-2 mb-3">
-                <div className="w-7 h-7 rounded-lg bg-[#00e87b] flex items-center justify-center">
-                  <DollarSign className="w-4 h-4 text-black" />
-                </div>
-                <span className="font-bold">CashPulse</span>
+              <div className="mb-3">
+                <Logo size={28} textClass="font-bold" />
               </div>
               <p className="text-xs text-[#555] leading-relaxed">AI-powered accounts receivable automation for B2B companies.</p>
               <a href="mailto:support@cashpulse.app" className="text-xs text-[#666] hover:text-[#00e87b] transition mt-3 inline-block">support@cashpulse.app</a>

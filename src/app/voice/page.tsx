@@ -2,6 +2,7 @@
 
 import { useState, useEffect } from 'react';
 import Link from 'next/link';
+import Logo from '@/components/Logo';
 
 interface VoiceboxStatus {
   connected: boolean;
@@ -139,10 +140,7 @@ export default function VoicePage() {
     <div className="min-h-screen bg-[#0a0a0a] text-white">
       <header className="border-b border-white/[0.06] px-6 py-4 flex items-center justify-between">
         <div className="flex items-center gap-4">
-          <Link href="/" className="flex items-center gap-2">
-            <div className="w-8 h-8 bg-[#00e87b] rounded-lg flex items-center justify-center font-bold text-black text-sm">C</div>
-            <span className="font-bold text-lg">CashPulse</span>
-          </Link>
+          <Logo textClass="font-bold text-lg" />
           <span className="text-gray-600">/</span>
           <span className="text-gray-400">Voice Calls</span>
         </div>

@@ -13,6 +13,7 @@
 
 import { useState, useEffect, useCallback } from 'react';
 import Link from 'next/link';
+import Logo from '@/components/Logo';
 
 // ─── Types ────────────────────────────────────────────────────────────────────
 type HealthStatus = 'GREEN' | 'YELLOW' | 'RED' | 'UNKNOWN';
@@ -208,12 +209,7 @@ export default function NexusPage() {
       {/* ── Nav ──────────────────────────────────────────────────────── */}
       <nav className="border-b border-white/[0.06] px-6 py-4">
         <div className="max-w-5xl mx-auto flex justify-between items-center">
-          <Link href="/" className="flex items-center gap-2">
-            <div className="w-8 h-8 rounded-lg bg-[#00e87b] flex items-center justify-center">
-              <span className="text-black font-bold text-sm">N</span>
-            </div>
-            <span className="text-xl font-bold">CashPulse</span>
-          </Link>
+          <Logo textClass="text-xl font-bold" />
           <div className="flex items-center gap-3">
             <Link href="/dashboard" className="text-sm text-gray-400 hover:text-white transition">Dashboard</Link>
             <Link href="/sales" className="text-sm text-gray-400 hover:text-white transition">Sales Agent</Link>
