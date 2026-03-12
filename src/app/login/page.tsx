@@ -200,9 +200,9 @@ function LoginForm() {
 
         <p className="text-center text-[12px] text-[#555] mt-6 leading-relaxed">
           By continuing, you agree to CashPulse&apos;s{' '}
-          <a href="#" className="text-[#888] hover:text-white underline">Terms of Service</a>{' '}
+          <a href="/terms" className="text-[#888] hover:text-white underline">Terms of Service</a>{' '}
           and{' '}
-          <a href="#" className="text-[#888] hover:text-white underline">Privacy Policy</a>.
+          <a href="/privacy" className="text-[#888] hover:text-white underline">Privacy Policy</a>.
         </p>
       </div>
     </div>

@@ -102,12 +102,12 @@ export default function Home() {
         </div>
       </section>
 
-      {/* ═══════════════ SOCIAL PROOF — LOGOS ═══════════════ */}
+      {/* ═══════════════ SOCIAL PROOF ═══════════════ */}
       <section className="py-12 px-6 border-t border-white/[0.04]">
         <div className="max-w-5xl mx-auto">
-          <p className="text-center text-xs font-medium tracking-[0.2em] uppercase text-[#555] mb-8">Trusted by finance teams at</p>
-          <div className="flex flex-wrap justify-center items-center gap-x-12 gap-y-6 opacity-40">
-            {["Meridian Supply Co.", "Atlas Logistics", "Vance & Partners", "Helix Manufacturing", "NovaTech Solutions", "Crane & Whitfield"].map((name) => (
+          <p className="text-center text-xs font-medium tracking-[0.2em] uppercase text-[#555] mb-8">Works with exports from</p>
+          <div className="flex flex-wrap justify-center items-center gap-x-10 gap-y-5 opacity-50">
+            {["QuickBooks", "Xero", "FreshBooks", "Sage", "NetSuite", "Wave", "Zoho", "Excel"].map((name) => (
               <span key={name} className="text-sm font-semibold tracking-wide text-white/80 whitespace-nowrap">{name}</span>
             ))}
           </div>
@@ -118,10 +118,10 @@ export default function Home() {
       <section className="py-16 px-6 border-t border-white/[0.04]">
         <div className="max-w-4xl mx-auto grid grid-cols-2 md:grid-cols-4 gap-8 text-center">
           {[
-            { value: "37%", label: "Average DSO reduction" },
-            { value: "2.4x", label: "Faster collection rate" },
-            { value: "94%", label: "Invoice recovery rate" },
-            { value: "<60s", label: "Setup time to first insight" },
+            { value: "4", label: "AI-powered email stages" },
+            { value: "<60s", label: "Upload to first insight" },
+            { value: "0", label: "Integrations required" },
+            { value: "14 days", label: "Free trial, no card" },
           ].map((stat) => (
             <div key={stat.label}>
               <div className="text-3xl md:text-4xl font-bold text-[#00e87b] mb-2">{stat.value}</div>
@@ -251,58 +251,39 @@ export default function Home() {
         </div>
       </section>
 
-      {/* ═══════════════ TESTIMONIALS ═══════════════ */}
+      {/* ═══════════════ HOW IT WORKS IN ACTION ═══════════════ */}
       <section className="py-24 px-6 border-t border-white/[0.04]">
         <div className="max-w-5xl mx-auto">
-          <p className="text-xs font-medium tracking-[0.2em] uppercase text-[#00e87b] text-center mb-4">What our users say</p>
-          <h2 className="text-3xl md:text-4xl font-bold text-center mb-16 tracking-tight">
-            Teams collect faster with CashPulse
+          <p className="text-xs font-medium tracking-[0.2em] uppercase text-[#00e87b] text-center mb-4">See it yourself</p>
+          <h2 className="text-3xl md:text-4xl font-bold text-center mb-4 tracking-tight">
+            Don&apos;t take our word for it &mdash; try the demo
           </h2>
+          <p className="text-[#888] text-center max-w-xl mx-auto mb-12">Our live demo uses real sample data so you can see exactly how CashPulse analyzes invoices, scores risk, and generates follow-up emails.</p>
           <div className="grid md:grid-cols-3 gap-6">
             {[
               {
-                quote: "We cut our DSO from 52 days to 31 days in the first quarter. The AI follow-ups feel personal — our customers actually respond to them.",
-                name: "Sarah Chen",
-                title: "VP Finance, Helix Manufacturing",
+                quote: "Upload a CSV and instantly see which invoices need attention. Risk scores, aging breakdown, customer analysis &mdash; all automatic.",
+                label: "Smart Dashboard",
+                cta: "Try the demo",
               },
               {
-                quote: "Before CashPulse, we had $180K sitting overdue. Within 6 weeks, we recovered $140K of it. The risk scoring is scarily accurate.",
-                name: "Marcus Webb",
-                title: "Controller, Atlas Logistics",
+                quote: "AI writes personalized collection emails for each customer &mdash; from friendly reminders to firm escalations. You review and approve.",
+                label: "AI Follow-ups",
+                cta: "See email samples",
               },
               {
-                quote: "I used to spend 15 hours a week chasing invoices. Now it takes me 2 hours. CashPulse basically automates the work I hated doing.",
-                name: "Priya Patel",
-                title: "AR Manager, NovaTech Solutions",
+                quote: "Track exactly how much you\u2019ve recovered, how fast you\u2019re collecting, and your ROI. Real numbers, not vanity metrics.",
+                label: "ROI Tracking",
+                cta: "View analytics",
               },
             ].map((t) => (
-              <div key={t.name} className="bg-[#111] border border-white/[0.06] rounded-2xl p-6 flex flex-col">
-                <div className="flex gap-1 mb-4">
-                  {[...Array(5)].map((_, i) => (
-                    <svg key={i} className="w-4 h-4 text-[#00e87b]" fill="currentColor" viewBox="0 0 20 20"><path d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z" /></svg>
-                  ))}
+              <div key={t.label} className="bg-[#111] border border-white/[0.06] rounded-2xl p-6 flex flex-col">
+                <div className="w-10 h-10 rounded-xl bg-[#00e87b]/10 flex items-center justify-center mb-4">
+                  <Zap className="w-5 h-5 text-[#00e87b]" />
                 </div>
-                <p className="text-sm text-[#ccc] leading-relaxed flex-1 mb-5">&ldquo;{t.quote}&rdquo;</p>
-                <div>
-                  <div className="text-sm font-semibold">{t.name}</div>
-                  <div className="text-xs text-[#666]">{t.title}</div>
-                </div>
-              </div>
-            ))}
-          </div>
-        </div>
-      </section>
-
-      {/* ═══════════════ INTEGRATIONS ═══════════════ */}
-      <section className="py-16 px-6 border-t border-white/[0.04]">
-        <div className="max-w-4xl mx-auto text-center">
-          <p className="text-xs font-medium tracking-[0.2em] uppercase text-[#00e87b] mb-4">Works with your stack</p>
-          <h2 className="text-2xl font-bold mb-4 tracking-tight">Export from anywhere, import into CashPulse</h2>
-          <p className="text-[#888] max-w-lg mx-auto mb-10 text-sm">CashPulse works with any CSV export. No API keys, no OAuth flows, no IT tickets.</p>
-          <div className="flex flex-wrap justify-center gap-4">
-            {["QuickBooks", "Xero", "FreshBooks", "Sage", "NetSuite", "Wave", "Zoho Invoice", "Excel / CSV"].map((name) => (
-              <div key={name} className="px-5 py-2.5 bg-[#111] border border-white/[0.06] rounded-xl text-sm text-[#999] font-medium">
-                {name}
+                <h3 className="font-semibold mb-2">{t.label}</h3>
+                <p className="text-sm text-[#ccc] leading-relaxed flex-1 mb-5">{t.quote}</p>
+                <Link href="/demo" className="text-sm text-[#00e87b] font-medium hover:underline">{t.cta} &rarr;</Link>
               </div>
             ))}
           </div>
@@ -412,7 +393,7 @@ export default function Home() {
       {/* ═══════════════ FOOTER ═══════════════ */}
       <footer className="border-t border-white/[0.04] pt-16 pb-8 px-6">
         <div className="max-w-5xl mx-auto">
-          <div className="grid grid-cols-2 md:grid-cols-5 gap-8 mb-12">
+          <div className="grid grid-cols-2 md:grid-cols-4 gap-8 mb-12">
             {/* Logo column */}
             <div className="col-span-2 md:col-span-1">
               <div className="flex items-center gap-2 mb-3">
@@ -422,6 +403,7 @@ export default function Home() {
                 <span className="font-bold">CashPulse</span>
               </div>
               <p className="text-xs text-[#555] leading-relaxed">AI-powered accounts receivable automation for B2B companies.</p>
+              <a href="mailto:support@cashpulse.app" className="text-xs text-[#666] hover:text-[#00e87b] transition mt-3 inline-block">support@cashpulse.app</a>
             </div>
             {/* Product */}
             <div>
@@ -429,9 +411,8 @@ export default function Home() {
               <ul className="space-y-2.5">
                 {[
                   { label: "Dashboard", href: "/dashboard" },
-                  { label: "Demo", href: "/demo" },
+                  { label: "Live Demo", href: "/demo" },
                   { label: "Pricing", href: "#pricing" },
-                  { label: "Voice Scripts", href: "/voice" },
                 ].map((l) => (
                   <li key={l.label}><Link href={l.href} className="text-sm text-[#666] hover:text-white transition">{l.label}</Link></li>
                 ))}
@@ -441,32 +422,21 @@ export default function Home() {
             <div>
               <h4 className="text-xs font-semibold text-[#888] uppercase tracking-wider mb-4">Resources</h4>
               <ul className="space-y-2.5">
-                {["How it Works", "Integrations", "FAQ", "Blog"].map((l) => (
-                  <li key={l}><a href="#" className="text-sm text-[#666] hover:text-white transition">{l}</a></li>
-                ))}
-              </ul>
-            </div>
-            {/* Company */}
-            <div>
-              <h4 className="text-xs font-semibold text-[#888] uppercase tracking-wider mb-4">Company</h4>
-              <ul className="space-y-2.5">
-                {["About", "Careers", "Contact", "Press"].map((l) => (
-                  <li key={l}><a href="#" className="text-sm text-[#666] hover:text-white transition">{l}</a></li>
-                ))}
+                <li><a href="#how" className="text-sm text-[#666] hover:text-white transition">How it Works</a></li>
+                <li><a href="#features" className="text-sm text-[#666] hover:text-white transition">Features</a></li>
               </ul>
             </div>
             {/* Legal */}
             <div>
               <h4 className="text-xs font-semibold text-[#888] uppercase tracking-wider mb-4">Legal</h4>
               <ul className="space-y-2.5">
-                {["Privacy Policy", "Terms of Service", "Security", "DPA"].map((l) => (
-                  <li key={l}><a href="#" className="text-sm text-[#666] hover:text-white transition">{l}</a></li>
-                ))}
+                <li><Link href="/privacy" className="text-sm text-[#666] hover:text-white transition">Privacy Policy</Link></li>
+                <li><Link href="/terms" className="text-sm text-[#666] hover:text-white transition">Terms of Service</Link></li>
               </ul>
             </div>
           </div>
           <div className="border-t border-white/[0.04] pt-8 flex flex-col md:flex-row justify-between items-center gap-4">
-            <p className="text-xs text-[#555]">&copy; {new Date().getFullYear()} CashPulse, Inc. All rights reserved.</p>
+            <p className="text-xs text-[#555]">&copy; {new Date().getFullYear()} CashPulse. All rights reserved.</p>
           </div>
         </div>
       </footer>
